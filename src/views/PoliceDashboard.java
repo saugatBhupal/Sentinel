@@ -58,3 +58,29 @@ public class PoliceDashboard extends JFrame{
 		logo.setBounds(25, 35, 58, 57);
 		logo.setIcon(imagePlugins.resize(new ImageIcon("resources/artboards/Sentinel-logo-2.png").getImage(), logo));
 		panel.add(logo);
+        
+		JLabel parentPageTitle = new JLabel();
+		parentPageTitle.setText("F.I.R");
+		parentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
+		parentPageTitle.setForeground(Color.decode("#002349"));
+		parentPageTitle.setBounds(239, 61, 141, 32);
+		panel.add(parentPageTitle);
+
+		DateTimeWidget.addWidget(panel);
+
+		JLabel dashboardIcon = new JLabel();
+		dashboardIcon.setBounds(36, 125, 35, 35);
+		dashboardIcon.setIcon(new ImageIcon("resources/artboards/dash-icon-default.png"));
+		panel.add(dashboardIcon);
+
+		JLabel recordsIcon = new JLabel();
+		recordsIcon.setBounds(39, 285, 35, 35);
+		recordsIcon.setIcon(imagePlugins
+				.resize(new ImageIcon("resources/artboards/records-icon-default.png").getImage(), recordsIcon));
+		panel.add(recordsIcon);
+
+		JLabel officersIcon = new JLabel();
+		officersIcon.setBounds(44, 349, 35, 25);
+		officersIcon.setIcon(imagePlugins
+				.resize(new ImageIcon("resources/artboards/police-icon-selected.png").getImage(), officersIcon));
+		panel.add(officersIcon);
