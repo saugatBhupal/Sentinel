@@ -84,7 +84,8 @@ public class PoliceDashboard extends JFrame{
 		officersIcon.setIcon(imagePlugins
 				.resize(new ImageIcon("resources/artboards/police-icon-selected.png").getImage(), officersIcon));
 		panel.add(officersIcon);
-        JLabel citizensIcon = new JLabel();
+
+		JLabel citizensIcon = new JLabel();
 		citizensIcon.setBounds(39, 413, 35, 35);
 		citizensIcon.setIcon(new ImageIcon("resources/artboards/citizen-icon-default.png"));
 		panel.add(citizensIcon);
@@ -194,3 +195,55 @@ public class PoliceDashboard extends JFrame{
 		font = allFIRsText.getFont();
 		newFIRsDescription.setFont(font);
 		panel.add(newFIRsDescription);
+
+		JLabel myFIRsIcon = new JLabel();
+		myFIRsIcon.setBounds(554, 540, 53, 53);
+		myFIRsIcon.setOpaque(true);
+		myFIRsIcon.setIcon(
+				imagePlugins.resize(new ImageIcon("resources/artboards/new-FIR.png").getImage(), myFIRsIcon));
+		panel.add(myFIRsIcon);
+
+		JLabel myFIRsLine = new JLabel();
+		myFIRsLine.setBounds(644, 528, 1, 100);
+		myFIRsLine.setBackground(Color.decode("#1A75D5"));
+		myFIRsLine.setOpaque(true);
+		panel.add(myFIRsLine);
+
+        JLabel viewMyFirs = new JLabel();
+		viewMyFirs.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		viewMyFirs.setFont(new Font("Jost", Font.PLAIN, 12));
+		viewMyFirs.setForeground(new Color(22, 91, 191,180));
+		viewMyFirs.setBounds(670, 595, 142, 55);
+		viewMyFirs.setText("View more");
+		panel.add(viewMyFirs);
+
+		JLabel myFIRsText = new JLabel();
+		myFIRsText.setFont(new Font("Jost", Font.PLAIN, 14));
+		myFIRsText.setForeground(Color.decode("#002349"));
+		myFIRsText.setBounds(554, 595, 142, 55);
+		myFIRsText.setText("My F.I.R");
+		panel.add(myFIRsText);
+
+		JTextArea myFIRsDescription = new JTextArea();
+		myFIRsDescription.setBounds(670, 540, 150, 78);
+		myFIRsDescription.setText(
+				"Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+		myFIRsDescription.setForeground(Color.decode("#002349"));
+		myFIRsDescription.setEditable(false);
+		myFIRsDescription.setLineWrap(true);
+		myFIRsDescription.setWrapStyleWord(true);
+		font = allFIRsText.getFont();
+		myFIRsDescription.setFont(font);
+		panel.add(myFIRsDescription);
+
+		JLabel backgroundLogin = new JLabel();
+		backgroundLogin.setOpaque(true);
+		backgroundLogin.setBounds(108, 0, 1093, 841);
+		backgroundLogin.setIcon(new ImageIcon("resources/artboards/dashboard-background.png"));
+		panel.add(backgroundLogin);
+	}
+
+	public JPanel getFrame() {
+		return panel;
+	}
+}
