@@ -245,5 +245,5 @@ public class PoliceDashboard extends JFrame{
 
 	public JPanel getFrame() {
 		return panel;
-	}
+    }
 }
