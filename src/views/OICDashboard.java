@@ -147,3 +147,104 @@ public class OICDashboard extends JFrame {
         policeIcon.setIcon(
                 imagePlugins.resize(new ImageIcon("resources/artboards/new-FIR.png").getImage(), policeIcon));
         panel.add(policeIcon);
+        
+        JLabel policeLine = new JLabel();
+        policeLine.setBounds(855, 254, 1, 100);
+        policeLine.setBackground(Color.decode("#1A75D5"));
+        policeLine.setOpaque(true);
+        panel.add(policeLine);
+
+        JLabel policeText = new JLabel();
+        policeText.setFont(new Font("Jost", Font.PLAIN, 14));
+        policeText.setForeground(Color.decode("#002349"));
+        policeText.setBounds(750, 311, 142, 55);
+        policeText.setText("Police Officers");
+        panel.add(policeText);
+
+        JTextArea policeDescription = new JTextArea();
+        policeDescription.setBounds(880, 264, 150, 78);
+        policeDescription.setText(
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eleifend.");
+        policeDescription.setForeground(Color.decode("#002349"));
+        policeDescription.setEditable(false);
+        policeDescription.setLineWrap(true);
+        policeDescription.setWrapStyleWord(true);
+        font = policeText.getFont();
+        policeDescription.setFont(font);
+        panel.add(policeDescription);
+
+        JLabel citizenIcon = new JLabel();
+        citizenIcon.setBounds(278, 526, 53, 53);
+        citizenIcon.setOpaque(true);
+        citizenIcon.setIcon(
+                imagePlugins.resize(new ImageIcon("resources/artboards/citizens.png").getImage(), citizenIcon));
+        panel.add(citizenIcon);
+
+        JLabel citizensLine = new JLabel();
+        citizensLine.setBounds(370, 514, 1, 100);
+        citizensLine.setBackground(Color.decode("#1A75D5"));
+        citizensLine.setOpaque(true);
+        panel.add(citizensLine);
+
+        JLabel citizenText = new JLabel();
+        citizenText.setFont(new Font("Jost", Font.PLAIN, 14));
+        citizenText.setForeground(Color.decode("#002349"));
+        citizenText.setBounds(278, 573, 142, 55);
+        citizenText.setText("Citizens");
+        panel.add(citizenText);
+
+        JTextArea citizenDescription = new JTextArea();
+        citizenDescription.setBounds(394, 524, 150, 78);
+        citizenDescription.setText(
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eleifend.");
+        citizenDescription.setForeground(Color.decode("#002349"));
+        citizenDescription.setEditable(false);
+        citizenDescription.setLineWrap(true);
+        citizenDescription.setWrapStyleWord(true);
+        font = FIRsText.getFont();
+        citizenDescription.setFont(font);
+        panel.add(citizenDescription);
+
+        JLabel offendersIcon = new JLabel();
+        offendersIcon.setBounds(765, 526, 53, 53);
+        offendersIcon.setOpaque(true);
+        offendersIcon.setIcon(
+                imagePlugins.resize(new ImageIcon("resources/artboards/offender.png").getImage(), officersIcon));
+        panel.add(offendersIcon);
+
+        JLabel offendersLine = new JLabel();
+        offendersLine.setBounds(855, 514, 1, 100);
+        offendersLine.setBackground(Color.decode("#1A75D5"));
+        offendersLine.setOpaque(true);
+        panel.add(offendersLine);
+
+        JLabel offendersText = new JLabel();
+        offendersText.setFont(new Font("Jost", Font.PLAIN, 14));
+        offendersText.setForeground(Color.decode("#002349"));
+        offendersText.setBounds(760, 573, 142, 55);
+        offendersText.setText("Offenders");
+        panel.add(offendersText);
+
+        JTextArea offenderDescription = new JTextArea();
+        offenderDescription.setBounds(880, 524, 150, 78);
+        offenderDescription.setText(
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eleifend.");
+        offenderDescription.setForeground(Color.decode("#002349"));
+        offenderDescription.setEditable(false);
+        offenderDescription.setLineWrap(true);
+        offenderDescription.setWrapStyleWord(true);
+        font = policeText.getFont();
+        offenderDescription.setFont(font);
+        panel.add(offenderDescription);
+
+        JLabel backgroundLogin = new JLabel();
+        backgroundLogin.setOpaque(true);
+        backgroundLogin.setBounds(26, 0, 1293, 841);
+        backgroundLogin.setIcon(new ImageIcon("resources/artboards/dashboard-cheif-background.png"));
+        panel.add(backgroundLogin);
+    }
+
+    public JPanel getFrame() {
+        return panel;
+    }
+}
