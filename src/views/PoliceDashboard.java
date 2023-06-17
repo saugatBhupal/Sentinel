@@ -39,3 +39,22 @@ public class PoliceDashboard extends JFrame{
 		this.policeController = new PoliceControllerImpl(panel);
 		initialize();
 	}
+    
+	public void initialize() {
+
+		frame = new JFrame();
+		frame.setBounds(0, 0, 1201, 841);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
+		frame.getContentPane().setLayout(null);
+
+		panel = new JPanel();
+		panel.setBackground(new Color(248, 248, 250, 1));
+		panel.setBounds(0, 0, 1201, 841);
+		panel.setLayout(null);
+		frame.getContentPane().add(panel);
+
+		JLabel logo = new JLabel();
+		logo.setBounds(25, 35, 58, 57);
+		logo.setIcon(imagePlugins.resize(new ImageIcon("resources/artboards/Sentinel-logo-2.png").getImage(), logo));
+		panel.add(logo);
