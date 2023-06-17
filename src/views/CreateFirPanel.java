@@ -233,4 +233,93 @@ public class CreateFirPanel extends JFrame {
         witnessLine.setOpaque(true);
         panel.add(witnessLine);
 
- 
+        JLabel categoryLabel = new JLabel();
+        categoryLabel.setFont(new Font("Jost", Font.PLAIN, 19));
+        categoryLabel.setBounds(750, 555, 264, 31);
+        categoryLabel.setText("Category");
+        panel.add(categoryLabel);
+
+        String categories[] = { "Theft/Burglary", "Assault", "Fraud/Forgery",
+                "Cybercrime", "Domestic Violence" };
+        JComboBox<String> category = new JComboBox<>(categories);
+        category.setSelectedItem("Inspector");
+        category.setBounds(746, 590, 200, 30);
+        category.setFont(new Font("Jost", Font.PLAIN, 16));
+        category.setForeground(Color.decode("#6D6767"));
+        category.setBackground(Color.decode("#ffffff"));
+        category.setFocusable(false);
+        panel.add(category);
+
+        JLabel fileFir = new JLabel("File F.I.R");
+        fileFir.setFont(new Font("Jost", Font.PLAIN, 16));
+        fileFir.setBackground(Color.decode("#1A75D5"));
+        fileFir.setOpaque(true);
+        fileFir.setHorizontalAlignment(SwingConstants.CENTER);
+        fileFir.setForeground(new Color(255, 255, 255, 240));
+        fileFir.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        fileFir.setBounds(585, 670, 184, 40);
+        fileFir.addMouseListener(Hover.newColor(fileFir, "#1A75D5", "165EAA"));
+        fileFir.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e ){
+                Fir fir = new Fir();
+                fir.setFiledBy(Long.valueOf(complaintByField.getText()));
+                fir.setFiledAgainst(Long.parseLong(againstField.getText()));
+                fir.setFiledDate(Date.valueOf(yearField.getText() + "-" + monthField.getText() + "-" + dateField.getText()));
+                fir.setFiledTime(Time.valueOf(hourField.getText() + ":" + minuteField.getText() + ":" + secondsField.getText()));
+                fir.setDescription(incidentField.getText());
+                fir.setCategory(category.getSelectedItem().toString());
+                fir.setEvidence(null);
+                fir.setRegisteredBy(Long.parseLong("200014"));
+                fir.setWitness(Long.parseLong(witnessField.getText()));
+                firController.save(fir);
+            }
+        });
+        panel.add(fileFir);
+
+        JLabel dashboardIcon = new JLabel();
+        dashboardIcon.setBounds(36, 125, 35, 35);
+        dashboardIcon.setIcon(new ImageIcon("resources/artboards/dash-icon-default.png"));
+        panel.add(dashboardIcon);
+
+        JLabel recordsIcon = new JLabel();
+        recordsIcon.setBounds(39, 285, 35, 35);
+        recordsIcon.setIcon(imagePlugins
+                .resize(new ImageIcon("resources/artboards/records-icon-default.png").getImage(), recordsIcon));
+        panel.add(recordsIcon);
+
+        JLabel officersIcon = new JLabel();
+        officersIcon.setBounds(44, 349, 35, 25);
+        officersIcon.setIcon(imagePlugins
+                .resize(new ImageIcon("resources/artboards/police-icon-selected.png").getImage(), officersIcon));
+        panel.add(officersIcon);
+
+        JLabel citizensIcon = new JLabel();
+        citizensIcon.setBounds(39, 413, 35, 35);
+        citizensIcon.setIcon(new ImageIcon("resources/artboards/citizen-icon-default.png"));
+        panel.add(citizensIcon);
+
+        JLabel convictsIcon = new JLabel();
+        convictsIcon.setBounds(39, 477, 35, 35);
+        convictsIcon.setIcon(new ImageIcon("resources/artboards/convict-icon-default.png"));
+        panel.add(convictsIcon);
+
+        JLabel sideMenuBar = new JLabel();
+        sideMenuBar.setBounds(0, 0, 108, 841);
+        sideMenuBar.setBackground(Color.decode("#002349"));
+        sideMenuBar.setOpaque(true);
+        panel.add(sideMenuBar);
+
+        JLabel backgroundFir = new JLabel();
+        backgroundFir.setOpaque(true);
+        backgroundFir.setBounds(108, 20, 1093, 841);
+        backgroundFir.setIcon(new ImageIcon("resources/artboards/create-F.I.R-background.png"));
+        panel.add(backgroundFir);
+    }
+
+    public JPanel getFrame() {
+        return panel;
+    }
+}
+
+   
