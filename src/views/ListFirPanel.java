@@ -222,3 +222,31 @@ public class ListFirPanel extends JFrame {
         details.setHorizontalAlignment(SwingConstants.CENTER);
         details.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 12));
         panel.add(details);
+
+        RoundedLabel pendingBackground = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+        pendingBackground.setBounds(210, 235, 860, 117);
+        pendingBackground.setBackground(Color.decode("#FEEEEE"));
+        panel.add(pendingBackground);
+
+        RoundedLabel resolvedBackground = new RoundedLabel("", 20, Color.decode("#F0FFFF"), 9);
+        resolvedBackground.setBounds(210, 385, 860, 117);
+        resolvedBackground.setBackground(Color.decode("#F0FFFF"));
+        panel.add(resolvedBackground);
+
+        RoundedLabel ongoingBackground = new RoundedLabel("", 20, Color.decode("#EEF7FE"), 9);
+        ongoingBackground.setBounds(210, 538, 860, 117);
+        ongoingBackground.setBackground(Color.decode("#EEF7FE"));
+        panel.add(ongoingBackground);
+
+        JLabel backgroundLogin = new JLabel();
+        backgroundLogin.setOpaque(true);
+        backgroundLogin.setBounds(108, 0, 1093, 841);
+        backgroundLogin.setIcon(new ImageIcon("resources/artboards/list-fir-background.png"));
+        panel.add(backgroundLogin);
+    }
+
+    public JPanel getFrame() {
+        return panel;
+    }
+}
+
