@@ -25,4 +25,17 @@ import utils.ui.event.Focus;
 import utils.ui.event.Hover;
 import views.widget.DateTimeWidget;
 
-public class PoliceDashboard extends JFrame{}
+public class PoliceDashboard extends JFrame{
+	private final CitizenController citizenController;
+	private final PoliceController policeController;
+	private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
+	private JFrame frame;
+	private JPanel panel;
+	private Font font;
+	private Map<TextAttribute, Object> attributes;
+
+	public PoliceDashboard() {
+		this.citizenController = new CitizenControllerImpl();
+		this.policeController = new PoliceControllerImpl(panel);
+		initialize();
+	}
