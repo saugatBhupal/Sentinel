@@ -25,7 +25,7 @@ import utils.ui.event.Focus;
 import utils.ui.event.Hover;
 import views.widget.DateTimeWidget;
 
-public class PoliceDashboard extends JFrame{
+public class PoliceDashboard extends JFrame {
 	private final CitizenController citizenController;
 	private final PoliceController policeController;
 	private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
@@ -39,7 +39,7 @@ public class PoliceDashboard extends JFrame{
 		this.policeController = new PoliceControllerImpl(panel);
 		initialize();
 	}
-    
+
 	public void initialize() {
 
 		frame = new JFrame();
@@ -58,7 +58,7 @@ public class PoliceDashboard extends JFrame{
 		logo.setBounds(25, 35, 58, 57);
 		logo.setIcon(imagePlugins.resize(new ImageIcon("resources/artboards/Sentinel-logo-2.png").getImage(), logo));
 		panel.add(logo);
-        
+
 		JLabel parentPageTitle = new JLabel();
 		parentPageTitle.setText("F.I.R");
 		parentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
@@ -245,5 +245,5 @@ public class PoliceDashboard extends JFrame{
 
 	public JPanel getFrame() {
 		return panel;
-    }
+	}
 }
