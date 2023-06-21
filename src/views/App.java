@@ -44,6 +44,8 @@ public class App extends JFrame {
 		JPanel panel = loginPanel.getFrame();
 		//RegisterPanel registerPanel = new RegisterPanel();
 		//JPanel panel = registerPanel.getFrame();
+		//CitizenList citizenList = new CitizenList();
+		//JPanel panel = citizenList.getFrame();
 		getContentPane().add(panel);//4447
 	}
 
