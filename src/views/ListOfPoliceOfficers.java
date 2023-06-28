@@ -125,4 +125,92 @@ public class PoliceList extends JFrame {
         contactNoTitle.setBounds(257, 76, 141, 32);
         panel.add(contactNoTitle);
 
+        JLabel dob = new JLabel();
+        dob.setText(police.getCitizen().getDOB().toString());
+        dob.setFont(new Font("Jost", Font.PLAIN, 15));
+        dob.setForeground(Color.decode("#93AEF8"));
+        dob.setBounds(343, 20, 141, 32);
+        panel.add(dob);
+
+        JLabel gender = new JLabel();
+        gender.setText("M");
+        gender.setFont(new Font("Jost", Font.PLAIN, 15));
+        gender.setForeground(Color.decode("#93AEF8"));
+        gender.setBounds(343, 48, 141, 32);
+        panel.add(gender);
+
+        JLabel contactNo = new JLabel();
+        contactNo.setText(police.getCitizen().getContact());
+        contactNo.setFont(new Font("Jost", Font.PLAIN, 15));
+        contactNo.setForeground(Color.decode("#93AEF8"));
+        contactNo.setBounds(343, 76, 141, 32);
+        panel.add(contactNo);
+
+        JLabel tempAddressTitle = new JLabel();
+        tempAddressTitle.setText("Temporary Address");
+        tempAddressTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        tempAddressTitle.setForeground(Color.decode("#415EB6"));
+        tempAddressTitle.setBounds(476, 20, 141, 32);
+        panel.add(tempAddressTitle);
+
+        JLabel addressTitle = new JLabel();
+        addressTitle.setText("Permanent Address");
+        addressTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        addressTitle.setForeground(Color.decode("#415EB6"));
+        addressTitle.setBounds(476, 48, 141, 32);
+        panel.add(addressTitle);
+
+        JLabel recordsTitle = new JLabel();
+        recordsTitle.setText("Total Records");
+        recordsTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        recordsTitle.setForeground(Color.decode("#415EB6"));
+        recordsTitle.setBounds(476, 76, 141, 32);
+        panel.add(recordsTitle);
+
+        JLabel tempAddress = new JLabel();
+        tempAddress.setText(police.getCitizen().getTemporaryAddress());
+        tempAddress.setFont(new Font("Jost", Font.PLAIN, 15));
+        tempAddress.setForeground(Color.decode("#93AEF8"));
+        tempAddress.setBounds(615, 20, 281, 32);
+        panel.add(tempAddress);
+
+        JLabel address = new JLabel();
+        address.setText(police.getCitizen().getPermanentAddress());
+        address.setFont(new Font("Jost", Font.PLAIN, 15));
+        address.setForeground(Color.decode("#93AEF8"));
+        address.setBounds(615, 48, 281, 32);
+        panel.add(address);
+
+        JLabel records = new JLabel();
+        records.setText("(12)");
+        records.setFont(new Font("Jost", Font.PLAIN, 15));
+        records.setForeground(Color.decode("#93AEF8"));
+        records.setBounds(575, 76, 281, 32);
+        panel.add(records);
+
+        RoundedLabel citizenBackground = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+        citizenBackground.setBounds(0, 0, 860, 117);
+        citizenBackground.setBackground(Color.decode("#EEF7FE"));
+        panel.add(citizenBackground);
+
+        return panel;
+    }
+
+    public void initialize() {
+
+        frame = new JFrame();
+        frame.setBounds(0, 0, 1201, 841);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.getContentPane().setLayout(null);
+
+        panel = new JPanel();
+        panel.setBackground(new Color(248, 248, 250, 1));
+        panel.setBounds(0, 0, 1201, 841);
+        panel.setLayout(null);
+        frame.getContentPane().add(panel);
+
+        
+    
+
         
