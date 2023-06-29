@@ -107,5 +107,105 @@ public class ListFirPanel extends JFrame {
         filedByTitle.setForeground(Color.decode("#AC4040"));
         filedByTitle.setBounds(569, 252, 141, 32);
         panel.add(filedByTitle);
-}
+
+        JLabel broughtByTitle = new JLabel();
+        broughtByTitle.setText("Brought By");
+        broughtByTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        broughtByTitle.setForeground(Color.decode("#AC4040"));
+        broughtByTitle.setBounds(569, 278, 141, 32);
+        panel.add(broughtByTitle);
+
+        JLabel broughtAgainstTitle = new JLabel();
+        broughtAgainstTitle.setText("Brought Against");
+        broughtAgainstTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        broughtAgainstTitle.setForeground(Color.decode("#AC4040"));
+        broughtAgainstTitle.setBounds(569, 305, 141, 32);
+        panel.add(broughtAgainstTitle);
+
+        JLabel filedBy = new JLabel();
+        filedBy.setText("Insp. Ram Dangol");
+        filedBy.setFont(new Font("Jost", Font.PLAIN, 15));
+        filedBy.setForeground(Color.decode("#CC8686"));
+        filedBy.setBounds(690, 252, 141, 32);
+        panel.add(filedBy);
+
+        JLabel broughtBy = new JLabel();
+        broughtBy.setText("Hari Prasad");
+        broughtBy.setFont(new Font("Jost", Font.PLAIN, 15));
+        broughtBy.setForeground(Color.decode("#CC8686"));
+        broughtBy.setBounds(690, 278, 141, 32);
+        panel.add(broughtBy);
+
+        JLabel broughtAgainst = new JLabel();
+        broughtAgainst.setText("Bhuwan Rawat");
+        broughtAgainst.setFont(new Font("Jost", Font.PLAIN, 15));
+        broughtAgainst.setForeground(Color.decode("#CC8686"));
+        broughtAgainst.setBounds(690, 305, 141, 32);
+        panel.add(broughtAgainst);
+
+        JLabel pending = new JLabel();
+        pending.setText("Pending");
+        pending.setFont(new Font("Jost", Font.BOLD, 15));
+        pending.setForeground(Color.decode("#AC4040"));
+        pending.setBounds(940, 258, 141, 32);
+        panel.add(pending);
+
+        RoundedLabel details = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+        details.setBounds(930, 300, 80, 28);
+        details.setBackground(Color.decode("#FEEEEE"));
+        details.setText("Details");
+        details.setFont(new Font("Jost", Font.PLAIN, 14));
+        details.setForeground(Color.decode("#677BC1"));
+        details.setHorizontalAlignment(SwingConstants.CENTER);
+        details.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 12));
+        panel.add(details);
+
+        RoundedLabel pendingBackground = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+        pendingBackground.setBounds(210, 235, 860, 117);
+        pendingBackground.setBackground(Color.decode("#FEEEEE"));
+        panel.add(pendingBackground);
+
+        return(panel);
+
+
+    public void initialize() {
+
+        frame = new JFrame();
+        frame.setBounds(0, 0, 1201, 841);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.getContentPane().setLayout(null);
+
+        panel = new JPanel();
+        panel.setBackground(new Color(248, 248, 250, 1));
+        panel.setBounds(0, 0, 1201, 841);
+        panel.setLayout(null);
+        frame.getContentPane().add(panel);
+
+        JLabel logo = new JLabel();
+        logo.setBounds(25, 35, 58, 57);
+        logo.setIcon(imagePlugins.resize(new ImageIcon("resources/artboards/Sentinel-logo-2.png").getImage(), logo));
+        panel.add(logo);
+
+        JLabel parentPageTitle = new JLabel();
+        parentPageTitle.setText("F.I.R");
+        parentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
+        parentPageTitle.setForeground(Color.decode("#002349"));
+        parentPageTitle.setBounds(239, 61, 141, 32);
+        panel.add(parentPageTitle);
+
+        JLabel separator = new JLabel();
+        separator.setIcon(new ImageIcon("resources/artboards/left-arrow-1.png"));
+        separator.setBounds(285, 70, 16, 16);
+        panel.add(separator);
+
+        JLabel currentPageTitle = new JLabel();
+        currentPageTitle.setText("All F.I.Rs");
+        currentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
+        currentPageTitle.setForeground(Color.decode("#1A75D5"));
+        currentPageTitle.setBounds(310, 61, 151, 32);
+        panel.add(currentPageTitle);
+
+        DateTimeWidget.addWidget(panel);
+    }
 }
