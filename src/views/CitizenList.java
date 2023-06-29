@@ -1,18 +1,28 @@
 package views;
 
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.util.List;
 import java.util.Map;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 import org.apache.batik.gvt.text.GVTAttributedCharacterIterator.TextAttribute;
 
+import controller.CitizenController;
+import controller.controllerImpl.CitizenControllerImpl;
+import model.Citizen;
 import plugins.MediaFormat;
 import plugins.ImagePlugins.ImagePlugins;
 import plugins.PluginFactory.PluginFactory;
@@ -24,12 +34,12 @@ import views.widget.DateTimeWidget;
 
 public class CitizenList extends JFrame {
     private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
+    private final CitizenController citizenController;
     private JFrame frame;
     private JPanel panel;
-    private Font font;
-    private Map<TextAttribute, Object> attributes;
 
     public CitizenList() {
+        this.citizenController = new CitizenControllerImpl();
         initialize();
     }
 
