@@ -557,10 +557,10 @@ public class CitizenDetails extends JFrame {
         background.setBackground(Color.decode("#FFFFFF"));
         background.setBounds(0,0,1201,841);
         panel.add(background);
-        
     }
 
     public JPanel getFrame() {
         return panel;
     }
 }
+
