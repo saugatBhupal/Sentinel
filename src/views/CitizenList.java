@@ -42,6 +42,158 @@ public class CitizenList extends JFrame {
         this.citizenController = new CitizenControllerImpl();
         initialize();
     }
+    private static JPanel createPanel(Citizen citizen) {
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(860, 117));
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        panel.setBackground(null);
+        panel.setLayout(null);
+
+        RoundedLabel details = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+        details.setBounds(618, 85, 80, 20);
+        details.setBackground(Color.decode("#EEF7FE"));
+        details.setText("Details");
+        details.setFont(new Font("Jost", Font.PLAIN, 13));
+        details.setForeground(Color.decode("#647DC4"));
+        details.setHorizontalAlignment(SwingConstants.CENTER);
+        details.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 12));
+        details.addMouseListener(Hover.animateOutline(details, "#EEF7FE", "#647DC4", "#26449E", "#EEF7FE"));
+        details.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        panel.add(details);
+        
+        JLabel citizenNoTitle = new JLabel();
+        citizenNoTitle.setText("Citizenship No.");
+        citizenNoTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        citizenNoTitle.setForeground(Color.decode("#415EB6"));
+        citizenNoTitle.setBounds(36, 20, 141, 32);
+        panel.add(citizenNoTitle);
+
+        JLabel firstNameTitle = new JLabel();
+        firstNameTitle.setText("First Name.");
+        firstNameTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        firstNameTitle.setForeground(Color.decode("#415EB6"));
+        firstNameTitle.setBounds(36, 48, 141, 32);
+        panel.add(firstNameTitle);
+
+        JLabel lastNameTitle = new JLabel();
+        lastNameTitle.setText("Last Name.");
+        lastNameTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        lastNameTitle.setForeground(Color.decode("#415EB6"));
+        lastNameTitle.setBounds(36, 76, 141, 32);
+        panel.add(lastNameTitle);
+
+        JLabel citizenshipNo = new JLabel();
+        citizenshipNo.setText(citizen.getCitizenshipNo().toString());
+        citizenshipNo.setFont(new Font("Jost", Font.PLAIN, 15));
+        citizenshipNo.setForeground(Color.decode("#93AEF8"));
+        citizenshipNo.setBounds(142, 20, 141, 32);
+        panel.add(citizenshipNo);
+
+        JLabel firstName = new JLabel();
+        firstName.setText(citizen.getFirstName());
+        firstName.setFont(new Font("Jost", Font.PLAIN, 15));
+        firstName.setForeground(Color.decode("#93AEF8"));
+        firstName.setBounds(122, 48, 141, 32);
+        panel.add(firstName);
+
+        JLabel lastName = new JLabel();
+        lastName.setText(citizen.getLastName());
+        lastName.setFont(new Font("Jost", Font.PLAIN, 15));
+        lastName.setForeground(Color.decode("#93AEF8"));
+        lastName.setBounds(122, 76, 141, 32);
+        panel.add(lastName);
+
+        JLabel DOBTitle = new JLabel();
+        DOBTitle.setText("D.O.B");
+        DOBTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        DOBTitle.setForeground(Color.decode("#415EB6"));
+        DOBTitle.setBounds(257, 20, 141, 32);
+        panel.add(DOBTitle);
+
+        JLabel genderTitle = new JLabel();
+        genderTitle.setText("Gender");
+        genderTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        genderTitle.setForeground(Color.decode("#415EB6"));
+        genderTitle.setBounds(257, 48, 141, 32);
+        panel.add(genderTitle);
+
+        JLabel contactNoTitle = new JLabel();
+        contactNoTitle.setText("Contact No.");
+        contactNoTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        contactNoTitle.setForeground(Color.decode("#415EB6"));
+        contactNoTitle.setBounds(257, 76, 141, 32);
+        panel.add(contactNoTitle);
+
+        JLabel dob = new JLabel();
+        dob.setText(citizen.getDOB().toString());
+        dob.setFont(new Font("Jost", Font.PLAIN, 15));
+        dob.setForeground(Color.decode("#93AEF8"));
+        dob.setBounds(343, 20, 141, 32);
+        panel.add(dob);
+
+        JLabel gender = new JLabel();
+        gender.setText("M");
+        gender.setFont(new Font("Jost", Font.PLAIN, 15));
+        gender.setForeground(Color.decode("#93AEF8"));
+        gender.setBounds(343, 48, 141, 32);
+        panel.add(gender);
+
+        JLabel contactNo = new JLabel();
+        contactNo.setText(citizen.getContact());
+        contactNo.setFont(new Font("Jost", Font.PLAIN, 15));
+        contactNo.setForeground(Color.decode("#93AEF8"));
+        contactNo.setBounds(343, 76, 141, 32);
+        panel.add(contactNo);
+
+        JLabel tempAddressTitle = new JLabel();
+        tempAddressTitle.setText("Temporary Address");
+        tempAddressTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        tempAddressTitle.setForeground(Color.decode("#415EB6"));
+        tempAddressTitle.setBounds(476, 20, 141, 32);
+        panel.add(tempAddressTitle);
+
+        JLabel addressTitle = new JLabel();
+        addressTitle.setText("Permanent Address");
+        addressTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        addressTitle.setForeground(Color.decode("#415EB6"));
+        addressTitle.setBounds(476, 48, 141, 32);
+        panel.add(addressTitle);
+
+        JLabel recordsTitle = new JLabel();
+        recordsTitle.setText("Total Records");
+        recordsTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        recordsTitle.setForeground(Color.decode("#415EB6"));
+        recordsTitle.setBounds(476, 76, 141, 32);
+        panel.add(recordsTitle);
+
+        JLabel tempAddress = new JLabel();
+        tempAddress.setText(citizen.getTemporaryAddress());
+        tempAddress.setFont(new Font("Jost", Font.PLAIN, 15));
+        tempAddress.setForeground(Color.decode("#93AEF8"));
+        tempAddress.setBounds(615, 20, 281, 32);
+        panel.add(tempAddress);
+
+        JLabel address = new JLabel();
+        address.setText(citizen.getPermanentAddress());
+        address.setFont(new Font("Jost", Font.PLAIN, 15));
+        address.setForeground(Color.decode("#93AEF8"));
+        address.setBounds(615, 48, 281, 32);
+        panel.add(address);
+
+        JLabel records = new JLabel();
+        records.setText("(12)");
+        records.setFont(new Font("Jost", Font.PLAIN, 15));
+        records.setForeground(Color.decode("#93AEF8"));
+        records.setBounds(575, 76, 281, 32);
+        panel.add(records);
+
+        RoundedLabel citizenBackground = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+        citizenBackground.setBounds(0, 0, 860, 117);
+        citizenBackground.setBackground(Color.decode("#EEF7FE"));
+        panel.add(citizenBackground);
+
+        return panel;
+    }
 
     public void initialize() {
 
@@ -135,152 +287,31 @@ public class CitizenList extends JFrame {
         searchButton.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 12));
         panel.add(searchButton);
 
-        JLabel citizenNoTitle = new JLabel();
-        citizenNoTitle.setText("Citizenship No.");
-        citizenNoTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        citizenNoTitle.setForeground(Color.decode("#415EB6"));
-        citizenNoTitle.setBounds(239, 252, 141, 32);
-        panel.add(citizenNoTitle);
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(232, 242, 888, 599);
+        scrollPane.setBorder(null);
+        scrollPane.getViewport().setBackground(Color.decode("#000000"));
+        panel.add(scrollPane);
 
-        JLabel firstNameTitle = new JLabel();
-        firstNameTitle.setText("First Name.");
-        firstNameTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        firstNameTitle.setForeground(Color.decode("#415EB6"));
-        firstNameTitle.setBounds(239, 278, 141, 32);
-        panel.add(firstNameTitle);
+        JPanel containerPanel = new JPanel();
+        containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.Y_AXIS));
+        containerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        containerPanel.setBackground(Color.decode("#FFFFFF"));
 
-        JLabel lastNameTitle = new JLabel();
-        lastNameTitle.setText("Last Name.");
-        lastNameTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        lastNameTitle.setForeground(Color.decode("#415EB6"));
-        lastNameTitle.setBounds(239, 305, 141, 32);
-        panel.add(lastNameTitle);
+        List<Citizen> citizens = citizenController.getAllCitizens();
+        for (Citizen citizen : citizens) {
+            JPanel panel = createPanel(citizen);
+            containerPanel.add(panel);
+            containerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        }
 
-        JLabel citizenshipNo = new JLabel();
-        citizenshipNo.setText("20098987");
-        citizenshipNo.setFont(new Font("Jost", Font.PLAIN, 15));
-        citizenshipNo.setForeground(Color.decode("#93AEF8"));
-        citizenshipNo.setBounds(350, 252, 141, 32);
-        panel.add(citizenshipNo);
+        scrollPane.setViewportView(containerPanel);
 
-        JLabel firstName = new JLabel();
-        firstName.setText("Ram");
-        firstName.setFont(new Font("Jost", Font.PLAIN, 15));
-        firstName.setForeground(Color.decode("#93AEF8"));
-        firstName.setBounds(350, 278, 141, 32);
-        panel.add(firstName);
-
-        JLabel lastName = new JLabel();
-        lastName.setText("Chaudary");
-        lastName.setFont(new Font("Jost", Font.PLAIN, 15));
-        lastName.setForeground(Color.decode("#93AEF8"));
-        lastName.setBounds(350, 305, 141, 32);
-        panel.add(lastName);
-
-        JLabel DOBTitle = new JLabel();
-        DOBTitle.setText("D.O.B");
-        DOBTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        DOBTitle.setForeground(Color.decode("#415EB6"));
-        DOBTitle.setBounds(480, 252, 141, 32);
-        panel.add(DOBTitle);
-
-        JLabel genderTitle = new JLabel();
-        genderTitle.setText("Gender");
-        genderTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        genderTitle.setForeground(Color.decode("#415EB6"));
-        genderTitle.setBounds(480, 278, 141, 32);
-        panel.add(genderTitle);
-
-        JLabel contactNoTitle = new JLabel();
-        contactNoTitle.setText("Contact No.");
-        contactNoTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        contactNoTitle.setForeground(Color.decode("#415EB6"));
-        contactNoTitle.setBounds(480, 305, 141, 32);
-        panel.add(contactNoTitle);
-
-        JLabel dob = new JLabel();
-        dob.setText("2023-04-13");
-        dob.setFont(new Font("Jost", Font.PLAIN, 15));
-        dob.setForeground(Color.decode("#93AEF8"));
-        dob.setBounds(570, 252, 141, 32);
-        panel.add(dob);
-
-        JLabel gender = new JLabel();
-        gender.setText("M");
-        gender.setFont(new Font("Jost", Font.PLAIN, 15));
-        gender.setForeground(Color.decode("#93AEF8"));
-        gender.setBounds(570, 278, 141, 32);
-        panel.add(gender);
-
-        JLabel contactNo = new JLabel();
-        contactNo.setText("9808763521");
-        contactNo.setFont(new Font("Jost", Font.PLAIN, 15));
-        contactNo.setForeground(Color.decode("#93AEF8"));
-        contactNo.setBounds(570, 305, 141, 32);
-        panel.add(contactNo);
-
-        JLabel tempAddressTitle = new JLabel();
-        tempAddressTitle.setText("Temporary Address");
-        tempAddressTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        tempAddressTitle.setForeground(Color.decode("#415EB6"));
-        tempAddressTitle.setBounds(710, 252, 141, 32);
-        panel.add(tempAddressTitle);
-
-        JLabel addressTitle = new JLabel();
-        addressTitle.setText("Permanent Address");
-        addressTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        addressTitle.setForeground(Color.decode("#415EB6"));
-        addressTitle.setBounds(710, 278, 141, 32);
-        panel.add(addressTitle);
-
-        JLabel recordsTitle = new JLabel();
-        recordsTitle.setText("Total Records");
-        recordsTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        recordsTitle.setForeground(Color.decode("#415EB6"));
-        recordsTitle.setBounds(710, 305, 141, 32);
-        panel.add(recordsTitle);
-
-        JLabel tempAddress = new JLabel();
-        tempAddress.setText("Kathmandu, ward-3, Nepal");
-        tempAddress.setFont(new Font("Jost", Font.PLAIN, 15));
-        tempAddress.setForeground(Color.decode("#93AEF8"));
-        tempAddress.setBounds(850, 252, 281, 32);
-        panel.add(tempAddress);
-
-        JLabel address = new JLabel();
-        address.setText("Pokhara, ward-12, Nepal");
-        address.setFont(new Font("Jost", Font.PLAIN, 15));
-        address.setForeground(Color.decode("#93AEF8"));
-        address.setBounds(850, 278, 281, 32);
-        panel.add(address);
-
-        JLabel records = new JLabel();
-        records.setText("(12)");
-        records.setFont(new Font("Jost", Font.PLAIN, 15));
-        records.setForeground(Color.decode("#93AEF8"));
-        records.setBounds(800, 305, 281, 32);
-        panel.add(records);
-
-        RoundedLabel details = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
-        details.setBounds(850, 314, 80, 20);
-        details.setBackground(Color.decode("#EEF7FE"));
-        details.setText("Details");
-        details.setFont(new Font("Jost", Font.PLAIN, 13));
-        details.setForeground(Color.decode("#647DC4"));
-        details.setHorizontalAlignment(SwingConstants.CENTER);
-        details.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 12));
-        panel.add(details);
-
-        RoundedLabel citizenBackground = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
-        citizenBackground.setBounds(210, 235, 860, 117);
-        citizenBackground.setBackground(Color.decode("#EEF7FE"));
-        panel.add(citizenBackground);
-
-        JLabel backgroundLogin = new JLabel();
-        backgroundLogin.setOpaque(true);
-        backgroundLogin.setBounds(110, 0, 1093, 841);
-        backgroundLogin.setIcon(new ImageIcon("resources/artboards/list-citizen-background.png"));
-        panel.add(backgroundLogin);
+        JLabel background = new JLabel();
+        background.setOpaque(true);
+        background.setBounds(110, 0, 1093, 841);
+        background.setIcon(new ImageIcon("resources/artboards/list-citizen-background.png"));
+        panel.add(background);
 
     }
 
