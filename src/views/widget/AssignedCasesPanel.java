@@ -129,3 +129,154 @@ public class AssignedCasesPanel extends JFrame {
         recordDate.setForeground(detailColor);
         recordDate.setBounds(161, 70, 141, 32);
         panel.add(recordDate);
+
+        JLabel fregisteredByTitle = new JLabel();
+        fregisteredByTitle.setText("Registered By");
+        fregisteredByTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        fregisteredByTitle.setForeground(titleColor);
+        fregisteredByTitle.setBounds(339, 20, 141, 32);
+        panel.add(fregisteredByTitle);
+
+        JLabel filedByTitle = new JLabel();
+        filedByTitle.setText("Filed By");
+        filedByTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        filedByTitle.setForeground(titleColor);
+        filedByTitle.setBounds(339, 44, 141, 32);
+        panel.add(filedByTitle);
+
+        JLabel filedAgainstTitle = new JLabel();
+        filedAgainstTitle.setText("Filed Against");
+        filedAgainstTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        filedAgainstTitle.setForeground(titleColor);
+        filedAgainstTitle.setBounds(339, 70, 141, 32);
+        panel.add(filedAgainstTitle);
+
+        JLabel registeredBy = new JLabel();
+        registeredBy.setText(policeController.search(fir.getRegisteredBy()).getCitizen().getFullName());
+        registeredBy.setFont(new Font("Jost", Font.PLAIN, 15));
+        registeredBy.setForeground(detailColor);
+        registeredBy.setBounds(457, 20, 241, 32);
+        panel.add(registeredBy);
+
+        JLabel filedBy = new JLabel();
+        filedBy.setText(citizenController.search(fir.getFiledBy()).getFullName());
+        filedBy.setFont(new Font("Jost", Font.PLAIN, 15));
+        filedBy.setForeground(detailColor);
+        filedBy.setBounds(457, 44, 241, 32);
+        panel.add(filedBy);
+
+        JLabel filedAgainst = new JLabel();
+        filedAgainst.setText(citizenController.search(fir.getFiledAgainst()).getFullName());
+        filedAgainst.setFont(new Font("Jost", Font.PLAIN, 15));
+        filedAgainst.setForeground(detailColor);
+        filedAgainst.setBounds(457, 70, 241, 32);
+        panel.add(filedAgainst);
+
+        JLabel status = new JLabel();
+        String statusText = (statusValue == 0) ? "Pending" : (statusValue == 1) ? "Ongoing" : "Resolved";
+        status.setText(statusText);
+        status.setText(statusText);
+        status.setFont(new Font("Jost", Font.BOLD, 15));
+        status.setForeground(titleColor);
+        status.setBounds(673, 29, 141, 32);
+        panel.add(status);
+
+        List<Log> logs = caseController.getAllLogs(cs.getCaseID());
+
+        RoundedLabel details = new RoundedLabel("", 20, backgroundColor, 9);
+        details.setBounds(670, 69, 65, 18);
+        details.setBackground(backgroundColor);
+        details.setText("Details");
+        details.setFont(new Font("Jost", Font.PLAIN, 14));
+        details.setForeground(Color.decode("#677BC1"));
+        details.setHorizontalAlignment(SwingConstants.CENTER);
+        details.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 12));
+        details.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        details.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e){
+                caseController.getDetail(cs, logs);
+            }
+        });
+        panel.add(details);
+
+        RoundedLabel pendingBackground = new RoundedLabel("", 20, backgroundColor, 9);
+        pendingBackground.setBounds(0, 0, 820, 117);
+        pendingBackground.setBackground(backgroundColor);
+        panel.add(pendingBackground);
+
+        return (panel);
+    }
+
+    public void initialize() {
+
+        frame = new JFrame();
+        frame.setBounds(0, 0, 1201, 841);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.getContentPane().setLayout(null);
+
+        panel = new JPanel();
+        panel.setBackground(new Color(248, 248, 250, 1));
+        panel.setBounds(0, 0, 1201, 841);
+        panel.setLayout(null);
+        frame.getContentPane().add(panel);
+
+        JLabel logo = new JLabel();
+        logo.setBounds(25, 35, 58, 57);
+        logo.setIcon(imagePlugins.resize(new ImageIcon("resources/artboards/Sentinel-logo-2.png").getImage(), logo));
+        panel.add(logo);
+
+        JLabel parentPageTitle = new JLabel();
+        parentPageTitle.setText("Cases");
+        parentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
+        parentPageTitle.setForeground(Color.decode("#002349"));
+        parentPageTitle.setBounds(239, 61, 141, 32);
+        panel.add(parentPageTitle);
+
+        JLabel separator = new JLabel();
+        separator.setIcon(new ImageIcon("resources/artboards/left-arrow-1.png"));
+        separator.setBounds(295, 70, 16, 16);
+        panel.add(separator);
+
+        JLabel currentPageTitle = new JLabel();
+        currentPageTitle.setText("Assigned Cases");
+        currentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
+        currentPageTitle.setForeground(Color.decode("#1A75D5"));
+        currentPageTitle.setBounds(320, 61, 151, 32);
+        panel.add(currentPageTitle);
+
+        DateTimeWidget.addWidget(panel);
+
+        JLabel dashboardIcon = new JLabel();
+        dashboardIcon.setBounds(36, 125, 35, 35);
+        dashboardIcon.setIcon(new ImageIcon("resources/artboards/dash-icon-default.png"));
+        panel.add(dashboardIcon);
+
+        JLabel recordsIcon = new JLabel();
+        recordsIcon.setBounds(39, 285, 35, 35);
+        recordsIcon.setIcon(imagePlugins
+                .resize(new ImageIcon("resources/artboards/records-icon-default.png").getImage(), recordsIcon));
+        panel.add(recordsIcon);
+
+        JLabel officersIcon = new JLabel();
+        officersIcon.setBounds(44, 349, 35, 25);
+        officersIcon.setIcon(imagePlugins
+                .resize(new ImageIcon("resources/artboards/police-icon-selected.png").getImage(), officersIcon));
+        panel.add(officersIcon);
+
+        JLabel citizensIcon = new JLabel();
+        citizensIcon.setBounds(39, 413, 35, 35);
+        citizensIcon.setIcon(new ImageIcon("resources/artboards/citizen-icon-default.png"));
+        panel.add(citizensIcon);
+
+        JLabel convictsIcon = new JLabel();
+        convictsIcon.setBounds(39, 477, 35, 35);
+        convictsIcon.setIcon(new ImageIcon("resources/artboards/convict-icon-default.png"));
+        panel.add(convictsIcon);
+
+        JLabel sideMenuBar = new JLabel();
+        sideMenuBar.setBounds(0, 0, 108, 841);
+        sideMenuBar.setBackground(Color.decode("#002349"));
+        sideMenuBar.setOpaque(true);
+        panel.add(sideMenuBar);
