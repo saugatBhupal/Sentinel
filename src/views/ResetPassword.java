@@ -67,5 +67,53 @@ public class ResetPassword {
         dashboardIcon.setBounds(36, 125, 35, 35);
         dashboardIcon.setIcon(new ImageIcon("resources/artboards/dash-icon-default.png"));
         panel.add(dashboardIcon);
+        JLabel recordsIcon = new JLabel();
+        recordsIcon.setBounds(39, 285, 35, 35);
+        recordsIcon.setIcon(imagePlugins
+                .resize(new ImageIcon("resources/artboards/records-icon-default.png").getImage(), recordsIcon));
+        panel.add(recordsIcon);
+
+        JLabel officersIcon = new JLabel();
+        officersIcon.setBounds(44, 349, 35, 25);
+        officersIcon.setIcon(imagePlugins
+                .resize(new ImageIcon("resources/artboards/police-icon-selected.png").getImage(), officersIcon));
+        panel.add(officersIcon);
+
+        JLabel citizensIcon = new JLabel();
+        citizensIcon.setBounds(39, 413, 35, 35);
+        citizensIcon.setIcon(new ImageIcon("resources/artboards/citizen-icon-default.png"));
+        panel.add(citizensIcon);
+
+        JLabel convictsIcon = new JLabel();
+        convictsIcon.setBounds(39, 477, 35, 35);
+        convictsIcon.setIcon(new ImageIcon("resources/artboards/convict-icon-default.png"));
+        panel.add(convictsIcon);
+
+        JLabel sideMenuBar = new JLabel();
+        sideMenuBar.setBounds(0, 0, 108, 841);
+        sideMenuBar.setBackground(Color.decode("#002349"));
+        sideMenuBar.setOpaque(true);
+        panel.add(sideMenuBar);
+
+        JLabel policeIdLabel = new JLabel();
+        policeIdLabel.setFont(new Font("Jost", Font.PLAIN, 19));
+        policeIdLabel.setBounds(509, 236, 134, 31);
+        policeIdLabel.setText("Police I.D");
+        panel.add(policeIdLabel);
+
+        JTextField policeIdField = new JTextField();
+        policeIdField.setFont(new Font("Jost", Font.PLAIN, 18));
+        policeIdField.setBackground(Color.decode("#FFFFFF"));
+        policeIdField.setBorder(null);
+        policeIdField.setForeground(Color.decode("#6D6767"));
+        policeIdField.addFocusListener(Focus.setPlaceholder(policeIdField, "Police I.D"));
+        policeIdField.setBounds(516, 269, 300, 23);
+        panel.add(policeIdField);
+
+        JLabel policeIdLine = new JLabel();
+        policeIdLine.setBounds(509, 299, 270, 1);
+        policeIdLine.setBackground(Color.decode("#000000"));
+        policeIdLine.setOpaque(true);
+        panel.add(policeIdLine);
 
        
