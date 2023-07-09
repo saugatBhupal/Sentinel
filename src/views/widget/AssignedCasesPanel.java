@@ -280,3 +280,53 @@ public class AssignedCasesPanel extends JFrame {
         sideMenuBar.setBackground(Color.decode("#002349"));
         sideMenuBar.setOpaque(true);
         panel.add(sideMenuBar);
+        
+        JTextField search = new JTextField();
+        search.setBorder(null);
+        search.addMouseListener(Hover.focusable(search));
+        search.addFocusListener(Focus.setPlaceholder(search, "Search for existing F.I.Rs"));
+        search.setFont(new Font("Jost", Font.PLAIN, 14));
+        search.setForeground(new Color(61, 63, 64, 180));
+        search.setBounds(414, 164, 365, 30);
+        panel.add(search);
+
+        RoundedLabel searchButton = new RoundedLabel("", 12, Color.decode("#1A75D5"), 9);
+        searchButton.setBounds(810, 160, 100, 35);
+        searchButton.setBackground(Color.decode("#1A75D5"));
+        searchButton.setText("Search");
+        searchButton.setFont(new Font("Jost", Font.PLAIN, 14));
+        searchButton.setForeground(Color.decode("#FFFFFF"));
+        searchButton.setHorizontalAlignment(SwingConstants.CENTER);
+        searchButton.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 12));
+        panel.add(searchButton);
+
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(232, 242, 888, 599);
+        scrollPane.setBorder(null);
+        scrollPane.getViewport().setBackground(Color.decode("#FFFF"));
+        panel.add(scrollPane);
+
+        JPanel containerPanel = new JPanel();
+        containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.Y_AXIS));
+        containerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        containerPanel.setBackground(Color.decode("#FFFFFF"));
+
+        for (Case cs : cases) {
+            JPanel panel = createPanel(cs);
+            containerPanel.add(panel);
+            containerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        }
+
+        scrollPane.setViewportView(containerPanel);
+
+        JLabel backgroundLogin = new JLabel();
+        backgroundLogin.setOpaque(true);
+        backgroundLogin.setBounds(110, 0, 1093, 841);
+        backgroundLogin.setIcon(new ImageIcon("resources/artboards/list-citizen-background.png"));
+        panel.add(backgroundLogin);
+    }
+
+    public JPanel getFrame() {
+        return panel;
+    }
+}
