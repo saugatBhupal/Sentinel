@@ -115,5 +115,80 @@ public class ResetPassword {
         policeIdLine.setBackground(Color.decode("#000000"));
         policeIdLine.setOpaque(true);
         panel.add(policeIdLine);
+        JLabel newPasswordLabel = new JLabel();
+        newPasswordLabel.setFont(new Font("Jost", Font.PLAIN, 19));
+        newPasswordLabel.setBounds(509, 333, 134, 31);
+        newPasswordLabel.setText("New Password");
+        panel.add(newPasswordLabel);
+
+		JPasswordField newPasswordField = new JPasswordField();
+		newPasswordField.setFont(new Font("Jost", Font.PLAIN, 18));
+		newPasswordField.setBorder(null);
+		newPasswordField.setForeground(Color.decode("#002349"));
+		newPasswordField.getDocument().addDocumentListener(Document.hidePassword(newPasswordField));
+		newPasswordField.addFocusListener(Focus.setPlaceholder(newPasswordField, "Enter Password...."));
+		newPasswordField.setBounds(516, 365, 300, 27);
+		panel.add(newPasswordField);
+
+        JLabel newPasswordLine = new JLabel();
+        newPasswordLine.setBounds(509, 396, 270, 1);
+        newPasswordLine.setBackground(Color.decode("#000000"));
+        newPasswordLine.setOpaque(true);
+        panel.add(newPasswordLine);
+
+        JLabel confirmPasswordLabel = new JLabel();
+        confirmPasswordLabel.setFont(new Font("Jost", Font.PLAIN, 19));
+        confirmPasswordLabel.setBounds(509, 430, 134, 31);
+        confirmPasswordLabel.setText("Confirm Password");
+        panel.add(confirmPasswordLabel);
+
+		JPasswordField confirmPasswordField = new JPasswordField();
+		confirmPasswordField.setFont(new Font("Jost", Font.PLAIN, 18));
+		confirmPasswordField.setBorder(null);
+		confirmPasswordField.setForeground(Color.decode("#002349"));
+		confirmPasswordField.getDocument().addDocumentListener(Document.hidePassword(confirmPasswordField));
+		confirmPasswordField.addFocusListener(Focus.setPlaceholder(confirmPasswordField, "Enter Password...."));
+		confirmPasswordField.setBounds(516, 465, 300, 27);
+		panel.add(confirmPasswordField);
+
+        JLabel confirmPasswordLine = new JLabel();
+        confirmPasswordLine.setBounds(509, 493, 270, 1);
+        confirmPasswordLine.setBackground(Color.decode("#000000"));
+        confirmPasswordLine.setOpaque(true);
+        panel.add(confirmPasswordLine);
+
+        JLabel privateKeyLabel = new JLabel();
+        privateKeyLabel.setFont(new Font("Jost", Font.PLAIN, 19));
+        privateKeyLabel.setBounds(509, 527, 134, 31);
+        privateKeyLabel.setText("Private");
+        panel.add(privateKeyLabel);
+
+        JTextField privateKeyField = new JTextField();
+        privateKeyField.setFont(new Font("Jost", Font.PLAIN, 18));
+        privateKeyField.setBackground(Color.decode("#FFFFFF"));
+        privateKeyField.setBorder(null);
+        privateKeyField.setForeground(Color.decode("#6D6767"));
+        privateKeyField.addFocusListener(Focus.setPlaceholder(privateKeyField, "Private Key"));
+        privateKeyField.setBounds(516, 562, 300, 23);
+        panel.add(privateKeyField);
+
+        JLabel privateKeyLine = new JLabel();
+        privateKeyLine.setBounds(509, 590, 270, 1);
+        privateKeyLine.setBackground(Color.decode("#000000"));
+        privateKeyLine.setOpaque(true);
+        panel.add(privateKeyLine);
+
+        JLabel backgroundLogin = new JLabel();
+        backgroundLogin.setOpaque(true);
+        backgroundLogin.setBounds(108, 0, 1093, 841);
+        backgroundLogin.setIcon(new ImageIcon("resources/artboards/reset-password-background.png"));
+        panel.add(backgroundLogin);
+
+    }
+
+    public JPanel getFrame() {
+        return panel;
+    }
+}
 
        
