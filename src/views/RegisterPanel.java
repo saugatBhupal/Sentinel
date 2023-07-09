@@ -201,7 +201,7 @@ public class RegisterPanel {
 		department.setBounds(834,479,80,23);
 		panel.add(department);*/
 		
-		String ranks[] = { "Inspector", "Sub Inspector", "Head Constable", "Constable"};
+		String ranks[] = {"Inspector", "Sub Inspector", "Head Constable", "Constable"};
 		JComboBox<String> rank = new JComboBox<>(ranks);
 		rank.setSelectedItem("Inspector");
 		rank.setBounds(820,490,200,23);
@@ -241,7 +241,6 @@ public class RegisterPanel {
 		errorField.setForeground(Color.decode("#CE0037"));
 		errorField.setBounds(424,254,176,20);
 		panel.add(errorField);
-
 
 		JLabel autofill = new JLabel("Autofill");
 		autofill.setFont(new Font("Jost", Font.PLAIN, 16));
