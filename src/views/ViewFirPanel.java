@@ -171,3 +171,180 @@ public class AllCasesPanel extends JFrame {
         complaintAgainstContact.setForeground(Color.decode("#737373"));
         complaintAgainstContact.setBounds(285, 336, 252, 32);
         panel.add(complaintAgainstContact);
+
+        RoundedLabel complaintBydetails = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+        complaintBydetails.setBounds(443, 149, 56, 18);
+        complaintBydetails.setBackground(Color.decode("#FFFFFF"));
+        complaintBydetails.setText("Details");
+        complaintBydetails.setFont(new Font("Jost", Font.PLAIN, 10));
+        complaintBydetails.setForeground(Color.decode("#647DC4"));
+        complaintBydetails.setHorizontalAlignment(SwingConstants.CENTER);
+        complaintBydetails.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 6));
+        complaintBydetails.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        complaintBydetails.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                citizenController.getDetail(citizenController.search(fir.getFiledBy()));
+            }
+        });
+        panel.add(complaintBydetails);
+
+        JLabel complaintAgainstTitle = new JLabel();
+        complaintAgainstTitle.setText("Complaint Against");
+        complaintAgainstTitle.setFont(new Font("Jost", Font.PLAIN, 16));
+        complaintAgainstTitle.setForeground(Color.decode("#415EB6"));
+        complaintAgainstTitle.setBounds(285, 263, 182, 32);
+        panel.add(complaintAgainstTitle);
+
+        JLabel complaintAgainst = new JLabel();
+        complaintAgainst.setText(citizenController.search(fir.getFiledAgainst()).getFullName());
+        complaintAgainst.setFont(new Font("Jost", Font.PLAIN, 15));
+        complaintAgainst.setForeground(Color.decode("#000000"));
+        complaintAgainst.setBounds(285, 290, 202, 32);
+        panel.add(complaintAgainst);
+
+        JLabel complaintAgainstAddress = new JLabel();
+        complaintAgainstAddress.setText(citizenController.search(fir.getFiledAgainst()).getTemporaryAddress());
+        complaintAgainstAddress.setFont(new Font("Jost", Font.PLAIN, 14));
+        complaintAgainstAddress.setForeground(Color.decode("#737373"));
+        complaintAgainstAddress.setBounds(285, 311, 282, 32);
+        panel.add(complaintAgainstAddress);
+
+        JLabel complaintAgainstContact = new JLabel();
+        complaintAgainstContact.setText(citizenController.search(fir.getFiledAgainst()).getContact());
+        complaintAgainstContact.setFont(new Font("Jost", Font.PLAIN, 14));
+        complaintAgainstContact.setForeground(Color.decode("#737373"));
+        complaintAgainstContact.setBounds(285, 336, 252, 32);
+        panel.add(complaintAgainstContact);
+
+        RoundedLabel complaintAgainstDetails = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+        complaintAgainstDetails.setBounds(443, 271, 56, 18);
+        complaintAgainstDetails.setBackground(Color.decode("#FFFFFF"));
+        complaintAgainstDetails.setText("Details");
+        complaintAgainstDetails.setFont(new Font("Jost", Font.PLAIN, 10));
+        complaintAgainstDetails.setForeground(Color.decode("#647DC4"));
+        complaintAgainstDetails.setHorizontalAlignment(SwingConstants.CENTER);
+        complaintAgainstDetails.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 6));
+        complaintAgainstDetails.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        complaintAgainstDetails.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                citizenController.getDetail(citizenController.search(fir.getFiledAgainst()));
+            }
+        });
+        panel.add(complaintAgainstDetails);
+
+        JLabel witnessTitle = new JLabel();
+        witnessTitle.setText("Witness");
+        witnessTitle.setFont(new Font("Jost", Font.PLAIN, 16));
+        witnessTitle.setForeground(Color.decode("#415EB6"));
+        witnessTitle.setBounds(781, 138, 102, 32);
+        panel.add(witnessTitle);
+        if (fir.getWitness() != 0) {
+            JLabel witnessName = new JLabel();
+            witnessName.setText(citizenController.search(fir.getWitness()).getFullName());
+            witnessName.setFont(new Font("Jost", Font.PLAIN, 15));
+            witnessName.setForeground(Color.decode("#000000"));
+            witnessName.setBounds(781, 167, 202, 32);
+            panel.add(witnessName);
+
+            JLabel witnessAddress = new JLabel();
+            witnessAddress.setText(citizenController.search(fir.getWitness()).getTemporaryAddress());
+            witnessAddress.setFont(new Font("Jost", Font.PLAIN, 14));
+            witnessAddress.setForeground(Color.decode("#737373"));
+            witnessAddress.setBounds(781, 190, 282, 32);
+            panel.add(witnessAddress);
+
+            JLabel witnessContact = new JLabel();
+            witnessContact.setText(citizenController.search(fir.getWitness()).getContact());
+            witnessContact.setFont(new Font("Jost", Font.PLAIN, 14));
+            witnessContact.setForeground(Color.decode("#737373"));
+            witnessContact.setBounds(781, 214, 252, 32);
+            panel.add(witnessContact);
+
+            RoundedLabel witnessDetails = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+            witnessDetails.setBounds(947, 149, 56, 18);
+            witnessDetails.setBackground(Color.decode("#FFFFFF"));
+            witnessDetails.setText("Details");
+            witnessDetails.setFont(new Font("Jost", Font.PLAIN, 10));
+            witnessDetails.setForeground(Color.decode("#647DC4"));
+            witnessDetails.setHorizontalAlignment(SwingConstants.CENTER);
+            witnessDetails.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 6));
+            witnessDetails.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            witnessDetails.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    citizenController.getDetail(citizenController.search(fir.getWitness()));
+                }
+            });
+            panel.add(witnessDetails);
+        } else {
+            JLabel witnessName = new JLabel();
+            witnessName.setText("No witness");
+            witnessName.setFont(new Font("Jost", Font.PLAIN, 15));
+            witnessName.setForeground(Color.decode("#737373"));
+            witnessName.setBounds(781, 167, 102, 32);
+            panel.add(witnessName);
+        }
+
+        JLabel registeredTitle = new JLabel();
+        registeredTitle.setText("Registered By");
+        registeredTitle.setFont(new Font("Jost", Font.PLAIN, 16));
+        registeredTitle.setForeground(Color.decode("#415EB6"));
+        registeredTitle.setBounds(781, 263, 182, 32);
+        panel.add(registeredTitle);
+
+        JLabel registeredName = new JLabel();
+        registeredName.setText(policeController.search(fir.getRegisteredBy()).getCitizen().getFullName());
+        registeredName.setFont(new Font("Jost", Font.PLAIN, 15));
+        registeredName.setForeground(Color.decode("#000000"));
+        registeredName.setBounds(781, 290, 202, 32);
+        panel.add(registeredName);
+
+        JLabel registeredContact = new JLabel();
+        registeredContact.setText(policeController.search(fir.getRegisteredBy()).getCitizen().getContact());
+        registeredContact.setFont(new Font("Jost", Font.PLAIN, 14));
+        registeredContact.setForeground(Color.decode("#737373"));
+        registeredContact.setBounds(781, 315, 252, 32);
+        panel.add(registeredContact);
+
+        RoundedLabel registeredDetails = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+        registeredDetails.setBounds(947, 271, 56, 18);
+        registeredDetails.setBackground(Color.decode("#FFFFFF"));
+        registeredDetails.setText("Details");
+        registeredDetails.setFont(new Font("Jost", Font.PLAIN, 10));
+        registeredDetails.setForeground(Color.decode("#647DC4"));
+        registeredDetails.setHorizontalAlignment(SwingConstants.CENTER);
+        registeredDetails.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 6));
+        registeredDetails.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        registeredDetails.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                citizenController.getDetail(policeController.search(fir.getRegisteredBy()).getCitizen());
+            }
+        });
+        panel.add(registeredDetails);
+
+        JLabel incidentTitle = new JLabel();
+        incidentTitle.setText("Incident Description");
+        incidentTitle.setFont(new Font("Jost", Font.PLAIN, 16));
+        incidentTitle.setForeground(Color.decode("#000000"));
+        incidentTitle.setBounds(282, 377, 182, 32);
+        panel.add(incidentTitle);
+
+        JTextArea incidentField = new JTextArea();
+        incidentField.setText(fir.getDescription());
+        incidentField.setFont(new Font("Jost", Font.PLAIN, 18));
+        incidentField.setBackground(Color.decode("#FFFFFF"));
+        incidentField.setBorder(null);
+        incidentField.setForeground(Color.decode("#6D6767"));
+        incidentField.setBounds(282, 429, 740, 95);
+        incidentField.setEditable(false);
+        panel.add(incidentField);
+
+        JLabel incidentDateTitle = new JLabel();
+        incidentDateTitle.setText("Incident Date & Time");
+        incidentDateTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        incidentDateTitle.setForeground(Color.decode("#000000"));
+        incidentDateTitle.setBounds(282, 557, 182, 32);
+        panel.add(incidentDateTitle);
