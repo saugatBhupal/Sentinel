@@ -106,21 +106,68 @@ public class AllCasesPanel extends JFrame {
         sideMenuBar.setOpaque(true);
         panel.add(sideMenuBar);
 
-        JTextField search = new JTextField();
-        search.setBorder(null);
-        search.addMouseListener(Hover.focusable(search));
-        search.addFocusListener(Focus.setPlaceholder(search, "Search for existing F.I.Rs"));
-        search.setFont(new Font("Jost", Font.PLAIN, 14));
-        search.setForeground(new Color(61, 63, 64, 180));
-        search.setBounds(414, 164, 365, 30);
-        panel.add(search);
+        JLabel complaintByTitle = new JLabel();
+        complaintByTitle.setText("Complaint By");
+        complaintByTitle.setFont(new Font("Jost", Font.PLAIN, 16));
+        complaintByTitle.setForeground(Color.decode("#415EB6"));
+        complaintByTitle.setBounds(285, 138, 102, 32);
+        panel.add(complaintByTitle);
 
-        RoundedLabel searchButton = new RoundedLabel("", 12, Color.decode("#1A75D5"), 9);
-        searchButton.setBounds(810, 160, 100, 35);
-        searchButton.setBackground(Color.decode("#1A75D5"));
-        searchButton.setText("Search");
-        searchButton.setFont(new Font("Jost", Font.PLAIN, 14));
-        searchButton.setForeground(Color.decode("#FFFFFF"));
-        searchButton.setHorizontalAlignment(SwingConstants.CENTER);
-        searchButton.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 12));
-        panel.add(searchButton);
+        JLabel complaintBy = new JLabel();
+        complaintBy.setText(citizenController.search(fir.getFiledBy()).getFullName());
+        complaintBy.setFont(new Font("Jost", Font.PLAIN, 15));
+        complaintBy.setForeground(Color.decode("#000000"));
+        complaintBy.setBounds(285, 167, 202, 32);
+        panel.add(complaintBy);
+
+        JLabel complaintByAddress = new JLabel();
+        complaintByAddress.setText(citizenController.search(fir.getFiledBy()).getTemporaryAddress());
+        complaintByAddress.setFont(new Font("Jost", Font.PLAIN, 14));
+        complaintByAddress.setForeground(Color.decode("#737373"));
+        complaintByAddress.setBounds(285, 190, 292, 32);
+        panel.add(complaintByAddress);
+
+        JLabel complaintByContact = new JLabel();
+        complaintByContact.setText(citizenController.search(fir.getFiledBy()).getContact());
+        complaintByContact.setFont(new Font("Jost", Font.PLAIN, 14));
+        complaintByContact.setForeground(Color.decode("#737373"));
+        complaintByContact.setBounds(285, 214, 252, 32);
+        panel.add(complaintByContact);
+
+        RoundedLabel complaintBydetails = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+        complaintBydetails.setBounds(443, 149, 56, 18);
+        complaintBydetails.setBackground(Color.decode("#FFFFFF"));
+        complaintBydetails.setText("Details");
+        complaintBydetails.setFont(new Font("Jost", Font.PLAIN, 10));
+        complaintBydetails.setForeground(Color.decode("#647DC4"));
+        complaintBydetails.setHorizontalAlignment(SwingConstants.CENTER);
+        complaintBydetails.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 6));
+        complaintBydetails.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        complaintBydetails.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                citizenController.getDetail(citizenController.search(fir.getFiledBy()));
+            }
+        });
+        panel.add(complaintBydetails);
+
+        JLabel complaintAgainst = new JLabel();
+        complaintAgainst.setText(citizenController.search(fir.getFiledAgainst()).getFullName());
+        complaintAgainst.setFont(new Font("Jost", Font.PLAIN, 15));
+        complaintAgainst.setForeground(Color.decode("#000000"));
+        complaintAgainst.setBounds(285, 290, 202, 32);
+        panel.add(complaintAgainst);
+
+        JLabel complaintAgainstAddress = new JLabel();
+        complaintAgainstAddress.setText(citizenController.search(fir.getFiledAgainst()).getTemporaryAddress());
+        complaintAgainstAddress.setFont(new Font("Jost", Font.PLAIN, 14));
+        complaintAgainstAddress.setForeground(Color.decode("#737373"));
+        complaintAgainstAddress.setBounds(285, 311, 282, 32);
+        panel.add(complaintAgainstAddress);
+
+        JLabel complaintAgainstContact = new JLabel();
+        complaintAgainstContact.setText(citizenController.search(fir.getFiledAgainst()).getContact());
+        complaintAgainstContact.setFont(new Font("Jost", Font.PLAIN, 14));
+        complaintAgainstContact.setForeground(Color.decode("#737373"));
+        complaintAgainstContact.setBounds(285, 336, 252, 32);
+        panel.add(complaintAgainstContact);
