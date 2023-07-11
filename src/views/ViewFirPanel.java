@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -348,3 +349,127 @@ public class AllCasesPanel extends JFrame {
         incidentDateTitle.setForeground(Color.decode("#000000"));
         incidentDateTitle.setBounds(282, 557, 182, 32);
         panel.add(incidentDateTitle);
+
+        JLabel incidentDate = new JLabel();
+        incidentDate.setText(String.valueOf(fir.getFiledDate()));
+        incidentDate.setFont(new Font("Jost", Font.PLAIN, 14));
+        incidentDate.setForeground(Color.decode("#737373"));
+        incidentDate.setBounds(282, 582, 252, 32);
+        panel.add(incidentDate);
+
+        JLabel incidentTime = new JLabel();
+        incidentTime.setText(String.valueOf(fir.getFiledTime()));
+        incidentTime.setFont(new Font("Jost", Font.PLAIN, 14));
+        incidentTime.setForeground(Color.decode("#737373"));
+        incidentTime.setBounds(372, 582, 252, 32);
+        panel.add(incidentTime);
+
+        JLabel registeredDateTitle = new JLabel();
+        registeredDateTitle.setText("Registered Date & Time");
+        registeredDateTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        registeredDateTitle.setForeground(Color.decode("#000000"));
+        registeredDateTitle.setBounds(791, 557, 182, 32);
+        panel.add(registeredDateTitle);
+
+        JLabel registeredDate = new JLabel();
+        registeredDate.setText(String.valueOf(fir.getRegisteredDate()));
+        registeredDate.setFont(new Font("Jost", Font.PLAIN, 14));
+        registeredDate.setForeground(Color.decode("#737373"));
+        registeredDate.setBounds(792, 582, 252, 32);
+        panel.add(registeredDate);
+
+        JLabel registeredTime = new JLabel();
+        registeredTime.setText(String.valueOf(fir.getRegisteredTime()));
+        registeredTime.setFont(new Font("Jost", Font.PLAIN, 14));
+        registeredTime.setForeground(Color.decode("#737373"));
+        registeredTime.setBounds(892, 582, 252, 32);
+        panel.add(registeredTime);
+
+        RoundedLabel evidence = new RoundedLabel("", 10, Color.decode("#FEEEEE"), 9);
+        evidence.setBounds(282, 622, 140, 35);
+        evidence.setBackground(Color.decode("#1A75D5"));
+        evidence.setText("View Evidences");
+        evidence.setFont(new Font("Jost", Font.PLAIN, 14));
+        evidence.setForeground(Color.decode("#FFFFFF"));
+        evidence.setHorizontalAlignment(SwingConstants.CENTER);
+        evidence.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 10));
+        evidence.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        evidence.addMouseListener(Hover.newColor(evidence, "#1A75D5", "165EAA"));
+        panel.add(evidence);
+
+        if (app.context.getRole().equals("oic")) {
+            JLabel assignTitle = new JLabel();
+            assignTitle.setText("Assign F.I.R");
+            assignTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+            assignTitle.setForeground(Color.decode("#000000"));
+            assignTitle.setBounds(795, 608, 182, 32);
+            panel.add(assignTitle);
+
+            JTextField assignField = new JTextField();
+            assignField.setFont(new Font("Jost", Font.PLAIN, 14));
+            assignField.setBackground(Color.decode("#FAFAFA"));
+            assignField.setBorder(null);
+            assignField.setForeground(Color.decode("#6D6767"));
+            assignField.addFocusListener(Focus.setPlaceholder(assignField, "Police I.D / Name"));
+            assignField.setBounds(795, 638, 150, 27);
+            panel.add(assignField);
+
+            JLabel againstLine = new JLabel();
+            againstLine.setBounds(795, 666, 190, 1);
+            againstLine.setBackground(Color.decode("#000000"));
+            againstLine.setOpaque(true);
+            panel.add(againstLine);
+
+            RoundedLabel register = new RoundedLabel("", 10, Color.decode("#FEEEEE"), 9);
+            register.setBounds(550, 690, 140, 35);
+            register.setBackground(Color.decode("#1A75D5"));
+            register.setText("Register");
+            register.setFont(new Font("Jost", Font.PLAIN, 14));
+            register.setForeground(Color.decode("#FFFFFF"));
+            register.setHorizontalAlignment(SwingConstants.CENTER);
+            register.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 10));
+            register.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            register.addMouseListener(Hover.newColor(register, "#1A75D5", "#165EAA"));
+            register.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e){
+                    Case cs = new Case();
+                    cs.setRegisteredDate(Date.valueOf(LocalDate.now()));
+                    cs.setRegisteredTime(Time.valueOf(LocalTime.now()));
+                    cs.setFirID(fir.getFirID());
+                    cs.setAssignedTo(Long.valueOf(assignField.getText()));
+                    caseController.registerCase(cs);
+                }
+            });
+            panel.add(register);
+        } else {
+            RoundedLabel update = new RoundedLabel("", 10, Color.decode("#FEEEEE"), 9);
+            update.setBounds(550, 680, 140, 35);
+            update.setBackground(Color.decode("#1A75D5"));
+            update.setText("Update F.I.R");
+            update.setFont(new Font("Jost", Font.PLAIN, 14));
+            update.setForeground(Color.decode("#FFFFFF"));
+            update.setHorizontalAlignment(SwingConstants.CENTER);
+            update.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 10));
+            update.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            update.addMouseListener(Hover.newColor(update, "#1A75D5", "#165EAA"));
+            update.addMouseListener(new MouseAdapter() {
+                @Override 
+                public void mouseClicked(MouseEvent e){
+                    firController.getUpdate(fir);
+                }
+            });
+            panel.add(update);
+        }
+
+        JLabel backgroundLogin = new JLabel();
+        backgroundLogin.setOpaque(true);
+        backgroundLogin.setBounds(25, -25, 1393, 841);
+        backgroundLogin.setIcon(new ImageIcon("resources/artboards/view-fir-background.png"));
+        panel.add(backgroundLogin);
+    }
+
+    public JPanel getFrame() {
+        return panel;
+    }
+}
