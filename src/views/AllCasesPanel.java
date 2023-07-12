@@ -124,5 +124,122 @@ public class AllCasesPanel extends JFrame {
         searchButton.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 12));
         panel.add(searchButton);
 
+        JLabel idTitle = new JLabel();
+        idTitle.setText("Record ID");
+        idTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        idTitle.setForeground(Color.decode("#AC4040"));
+        idTitle.setBounds(239, 252, 141, 32);
+        panel.add(idTitle);
+
+        JLabel recordNameTitle = new JLabel();
+        recordNameTitle.setText("Record Name");
+        recordNameTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        recordNameTitle.setForeground(Color.decode("#AC4040"));
+        recordNameTitle.setBounds(239, 278, 141, 32);
+        panel.add(recordNameTitle);
+
+        JLabel recordDateTitle = new JLabel();
+        recordDateTitle.setText("Record Date");
+        recordDateTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        recordDateTitle.setForeground(Color.decode("#AC4040"));
+        recordDateTitle.setBounds(239, 305, 141, 32);
+        panel.add(recordDateTitle);
+
+        JLabel id = new JLabel();
+        id.setText("9876678");
+        id.setFont(new Font("Jost", Font.PLAIN, 15));
+        id.setForeground(Color.decode("#CC8686"));
+        id.setBounds(360, 252, 141, 32);
+        panel.add(id);
+
+        JLabel recordName = new JLabel();
+        recordName.setText("Auto Theft");
+        recordName.setFont(new Font("Jost", Font.PLAIN, 15));
+        recordName.setForeground(Color.decode("#CC8686"));
+        recordName.setBounds(360, 278, 141, 32);
+        panel.add(recordName);
+
+        JLabel recordDate = new JLabel();
+        recordDate.setText("12-09-2022");
+        recordDate.setFont(new Font("Jost", Font.PLAIN, 15));
+        recordDate.setForeground(Color.decode("#CC8686"));
+        recordDate.setBounds(360, 305, 141, 32);
+        panel.add(recordDate);
+
+        JLabel assignedToTitle = new JLabel();
+        assignedToTitle.setText("Assigned To");
+        assignedToTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        assignedToTitle.setForeground(Color.decode("#AC4040"));
+        assignedToTitle.setBounds(569, 252, 141, 32);
+        panel.add(assignedToTitle);
+
+        JLabel broughtByTitle = new JLabel();
+        broughtByTitle.setText("Brought By");
+        broughtByTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        broughtByTitle.setForeground(Color.decode("#AC4040"));
+        broughtByTitle.setBounds(569, 278, 141, 32);
+        panel.add(broughtByTitle);
+
+        JLabel broughtAgainstTitle = new JLabel();
+        broughtAgainstTitle.setText("Brought Against");
+        broughtAgainstTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        broughtAgainstTitle.setForeground(Color.decode("#AC4040"));
+        broughtAgainstTitle.setBounds(569, 305, 141, 32);
+        panel.add(broughtAgainstTitle);
+
+        JLabel assignedTo = new JLabel();
+        assignedTo.setText("Insp. Ram Dangol");
+        assignedTo.setFont(new Font("Jost", Font.PLAIN, 15));
+        assignedTo.setForeground(Color.decode("#CC8686"));
+        assignedTo.setBounds(690, 252, 141, 32);
+        panel.add(assignedTo);
+
+        JLabel broughtBy = new JLabel();
+        broughtBy.setText("Hari Prasad");
+        broughtBy.setFont(new Font("Jost", Font.PLAIN, 15));
+        broughtBy.setForeground(Color.decode("#CC8686"));
+        broughtBy.setBounds(690, 278, 141, 32);
+        panel.add(broughtBy);
+
+        JLabel broughtAgainst = new JLabel();
+        broughtAgainst.setText("Bhuwan Rawat");
+        broughtAgainst.setFont(new Font("Jost", Font.PLAIN, 15));
+        broughtAgainst.setForeground(Color.decode("#CC8686"));
+        broughtAgainst.setBounds(690, 305, 141, 32);
+        panel.add(broughtAgainst);
+
+        JLabel pending = new JLabel();
+        pending.setText("Pending");
+        pending.setFont(new Font("Jost", Font.BOLD, 15));
+        pending.setForeground(Color.decode("#AC4040"));
+        pending.setBounds(940, 258, 141, 32);
+        panel.add(pending);
+
+        RoundedLabel details = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+        details.setBounds(930, 300, 80, 28);
+        details.setBackground(Color.decode("#FEEEEE"));
+        details.setText("Details");
+        details.setFont(new Font("Jost", Font.PLAIN, 14));
+        details.setForeground(Color.decode("#677BC1"));
+        details.setHorizontalAlignment(SwingConstants.CENTER);
+        details.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 12));
+        panel.add(details);
+
+        RoundedLabel pendingBackground = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+        pendingBackground.setBounds(210, 235, 860, 117);
+        pendingBackground.setBackground(Color.decode("#FEEEEE"));
+        panel.add(pendingBackground);
+
+        JLabel backgroundLogin = new JLabel();
+        backgroundLogin.setOpaque(true);
+        backgroundLogin.setBounds(110, 0, 1093, 841);
+        backgroundLogin.setIcon(new ImageIcon("resources/artboards/list-citizen-background.png"));
+        panel.add(backgroundLogin);
+    
+
+    public JPanel getFrame() {
+        return panel;
+    }
+}
     
 
