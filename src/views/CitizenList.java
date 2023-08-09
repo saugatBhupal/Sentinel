@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
 
@@ -34,14 +38,17 @@ import views.widget.DateTimeWidget;
 
 public class CitizenList extends JFrame {
     private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
-    private final CitizenController citizenController;
+    private static CitizenController citizenController;
+    private List<Citizen> citizens;
     private JFrame frame;
     private JPanel panel;
 
-    public CitizenList() {
-        this.citizenController = new CitizenControllerImpl();
+    public CitizenList(App app, List<Citizen> citizens) {
+        this.citizenController = new CitizenControllerImpl(app);
+        this.citizens = citizens;
         initialize();
     }
+
     private static JPanel createPanel(Citizen citizen) {
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(860, 117));
@@ -49,7 +56,7 @@ public class CitizenList extends JFrame {
         panel.setBackground(null);
         panel.setLayout(null);
 
-        RoundedLabel details = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+        RoundedLabel details = new RoundedLabel("", 12, Color.decode("#FEEEEE"), 9);
         details.setBounds(618, 85, 80, 20);
         details.setBackground(Color.decode("#EEF7FE"));
         details.setText("Details");
@@ -59,8 +66,14 @@ public class CitizenList extends JFrame {
         details.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 12));
         details.addMouseListener(Hover.animateOutline(details, "#EEF7FE", "#647DC4", "#26449E", "#EEF7FE"));
         details.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        details.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                citizenController.getDetail(citizen);
+            }
+        });
         panel.add(details);
-        
+
         JLabel citizenNoTitle = new JLabel();
         citizenNoTitle.setText("Citizenship No.");
         citizenNoTitle.setFont(new Font("Jost", Font.PLAIN, 15));
@@ -275,6 +288,14 @@ public class CitizenList extends JFrame {
         search.setFont(new Font("Jost", Font.PLAIN, 14));
         search.setForeground(new Color(61, 63, 64, 180));
         search.setBounds(414, 164, 365, 30);
+        search.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    citizenController.fullTextSearch(search.getText());
+                }
+            }
+        });
         panel.add(search);
 
         RoundedLabel searchButton = new RoundedLabel("", 12, Color.decode("#1A75D5"), 9);
@@ -285,12 +306,20 @@ public class CitizenList extends JFrame {
         searchButton.setForeground(Color.decode("#FFFFFF"));
         searchButton.setHorizontalAlignment(SwingConstants.CENTER);
         searchButton.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 12));
+        searchButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        searchButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("True");
+                citizenController.fullTextSearch(search.getText());
+            }
+        });
         panel.add(searchButton);
 
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(232, 242, 888, 599);
         scrollPane.setBorder(null);
-        scrollPane.getViewport().setBackground(Color.decode("#000000"));
+        scrollPane.getViewport().setBackground(Color.decode("#FFFF"));
         panel.add(scrollPane);
 
         JPanel containerPanel = new JPanel();
@@ -298,13 +327,14 @@ public class CitizenList extends JFrame {
         containerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         containerPanel.setBackground(Color.decode("#FFFFFF"));
 
-        List<Citizen> citizens = citizenController.getAllCitizens();
+        if (citizens == null) {
+            citizenController.getAllCitizens();
+        }
         for (Citizen citizen : citizens) {
             JPanel panel = createPanel(citizen);
             containerPanel.add(panel);
             containerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         }
-
         scrollPane.setViewportView(containerPanel);
 
         JLabel background = new JLabel();
