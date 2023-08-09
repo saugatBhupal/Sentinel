@@ -14,6 +14,7 @@ import javax.swing.SwingConstants;
 
 import controller.PoliceController;
 import controller.controllerImpl.PoliceControllerImpl;
+import model.Case;
 import model.Police;
 import plugins.MediaFormat;
 import plugins.ImagePlugins.ImagePlugins;
@@ -40,8 +41,8 @@ public class LoginPanel extends JFrame {
 	private Map<TextAttribute, Object> attributes;
 	private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
 
-	public LoginPanel() {
-		this.policeController = new PoliceControllerImpl(panel);
+	public LoginPanel(App app) {
+		this.policeController = new PoliceControllerImpl(panel, app);
 		initialize();
 
 	}
@@ -138,23 +139,10 @@ public class LoginPanel extends JFrame {
 		loginButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int status = policeController.authenticate(new Police(Long.parseLong(citizenshipField.getText()), new String(passwordField.getPassword())));
-				if(status == 1){
-					JOptionPane.showMessageDialog(panel, "Logged in");
-				}
-				else{
-					JOptionPane.showMessageDialog(panel, "Failed to log in. Please re-check your credentials.");
-				}
+				policeController.authenticate(new Police(Long.parseLong(citizenshipField.getText()), new String(passwordField.getPassword())));
 			}
 		});
 		panel.add(loginButton);
-		
-		JLabel loginSupport = new JLabel();
-		loginSupport.setText("Need help logging in?");
-		loginSupport.setFont(new Font("Jost", Font.PLAIN, 16));
-		loginSupport.setForeground(Color.decode("#002349"));
-		loginSupport.setBounds(733, 690, 229, 23);
-		panel.add(loginSupport);
 
 		JLabel clickHere = new JLabel();
 		clickHere.setText("Click Here");
@@ -163,6 +151,15 @@ public class LoginPanel extends JFrame {
 		clickHere.setForeground(new Color(22, 91, 191,180));
 		clickHere.setBounds(892, 690, 229, 23);
 		panel.add(clickHere);
+		
+		JLabel loginSupport = new JLabel();
+		loginSupport.setText("Need help logging in?");
+		loginSupport.setFont(new Font("Jost", Font.PLAIN, 16));
+		loginSupport.setForeground(Color.decode("#002349"));
+		loginSupport.setBounds(733, 690, 229, 23);
+		panel.add(loginSupport);
+
+		
 
 		JLabel logo = new JLabel();
 		logo.setBounds(29, 30, 85, 85);

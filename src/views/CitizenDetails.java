@@ -1,19 +1,39 @@
 package views;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.Map;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 import org.apache.batik.gvt.text.GVTAttributedCharacterIterator.TextAttribute;
 
+import controller.CaseController;
+import controller.FirController;
+import controller.VerdictController;
+import controller.controllerImpl.CaseControllerImpl;
+import controller.controllerImpl.FirControllerImpl;
+import controller.controllerImpl.VerdictControllerImpl;
+import model.Case;
+import model.Citizen;
+import model.Fir;
+import model.Log;
+import model.Verdict;
 import plugins.MediaFormat;
 import plugins.ImagePlugins.ImagePlugins;
 import plugins.PluginFactory.PluginFactory;
@@ -22,17 +42,132 @@ import utils.ui.event.Hover;
 import utils.ui.graphic.RoundedLabel;
 import utils.ui.graphic.RoundedBorderLabel;
 import views.widget.DateTimeWidget;
+import views.widget.ImageViewerWidget;
 
 public class CitizenDetails extends JFrame {
     private JFrame frame;
     private JPanel panel;
+    private final App app;
+    private Citizen citizen;
     private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
+    private static FirController firController;
+    private static CaseController caseController;
+    private static VerdictController verdictController;
     private Font font;
     private Map<TextAttribute, Object> attributes;
 
-    public CitizenDetails() {
-
+    public CitizenDetails(App app, Citizen citizen) {
+        this.app = app;
+        this.citizen = citizen;
+        this.firController = new FirControllerImpl(app);
+        this.caseController = new CaseControllerImpl(app);
+        this.verdictController = new VerdictControllerImpl(app);
         initialize();
+    }
+
+    private static JPanel createPanel(Fir fir, Long citizenID) {
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(837, 37));
+        panel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        panel.setBackground(null);
+        panel.setLayout(null);
+
+        String typeText;
+        String statusText;
+        int statusValue = fir.getStatus();
+        if (statusValue == 0) {
+            typeText = "F.I.R";
+            statusText = "Pending";
+        } else if (statusValue == 1) {
+            typeText = "Case";
+            statusText = "Ongoing";
+
+        } else {
+            typeText = "Verdict";
+            statusText = "Resolved";
+      }
+
+        String roleText = (fir.getFiledBy().equals(citizenID) ? "Victim"
+                : fir.getFiledAgainst().equals(citizenID) ? "Perpetrator"
+                        : fir.getWitness().equals(citizenID) ? "witness" : "");
+
+        JLabel offenceDate = new JLabel();
+        offenceDate.setText(fir.getFiledDate().toString());
+        offenceDate.setFont(new Font("Jost", Font.PLAIN, 14));
+        offenceDate.setForeground(Color.decode("#000000"));
+        offenceDate.setBounds(0, 0, 109, 20);
+        panel.add(offenceDate);
+
+        JTextArea type = new JTextArea();
+        type.setText(typeText);
+        type.setBackground(Color.decode("#FFFFFF"));
+        type.setFont(new Font("Jost", Font.PLAIN, 14));
+        type.setForeground(Color.decode("#000000"));
+        type.setBounds(222, 0, 46, 20);
+        type.setBorder(null);
+        type.setEditable(false);
+        type.setLineWrap(true);
+        type.setWrapStyleWord(true);
+        panel.add(type);
+
+        JTextArea role = new JTextArea();
+        role.setText(roleText);
+        role.setBackground(Color.decode("#FFFFFF"));
+        role.setFont(new Font("Jost", Font.PLAIN, 14));
+        role.setForeground(Color.decode("#000000"));
+        role.setBounds(368, 0, 77, 20);
+        role.setBorder(null);
+        role.setEditable(false);
+        role.setLineWrap(true);
+        role.setWrapStyleWord(true);
+        panel.add(role);
+
+        JTextArea status = new JTextArea();
+        status.setText(statusText);
+        status.setBackground(Color.decode("#FFFFFF"));
+        status.setFont(new Font("Jost", Font.PLAIN, 14));
+        status.setForeground(Color.decode("#000000"));
+        status.setBounds(525, 0, 83, 20);
+        status.setBorder(null);
+        status.setEditable(false);
+        status.setLineWrap(true);
+        status.setWrapStyleWord(true);
+        panel.add(status);
+
+        JTextArea detail = new JTextArea();
+        detail.setText("view ->");
+        detail.setBackground(Color.decode("#FFFFFF"));
+        detail.setFont(new Font("Jost", Font.PLAIN, 14));
+        detail.setForeground(Color.decode("#000000"));
+        detail.setBounds(688, 0, 87, 20);
+        detail.setBorder(null);
+        detail.setEditable(false);
+        detail.setLineWrap(true);
+        detail.setWrapStyleWord(true);
+        detail.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e){
+                
+                Case cs = caseController.findByFirID(fir.getFirID());
+                if(statusValue == 2){
+                    Verdict verdict = verdictController.getVerdict(cs);
+                    if (verdict != null) {
+                        ImageViewerWidget widget = new ImageViewerWidget((verdict.getVerdict()));
+                        widget.setVisible(true);
+                    }
+                }
+                if(statusValue == 1){   
+                    List<Log> logs = caseController.getAllLogs(cs.getCaseID());
+                    caseController.getDetail(cs,logs);
+                }
+                if(statusValue == 0){
+                    firController.getDetail(fir);
+                }
+            }
+        });
+        panel.add(detail);
+
+        return panel;
     }
 
     public void initialize() {
@@ -109,7 +244,8 @@ public class CitizenDetails extends JFrame {
         panel.add(sideMenuBar);
 
         RoundedLabel citizenPhoto = new RoundedLabel("", 20, Color.decode("#EEF7FE"), 45);
-        citizenPhoto.setBounds(246, 180, 155, 165);
+        citizenPhoto.setIcon(imagePlugins.resize(new ImageIcon("resources/assets/profiles/"+citizen.getCitizenshipNo()+".png").getImage(), citizenPhoto));
+        citizenPhoto.setBounds(246, 180, 180, 165);
         citizenPhoto.setBackground(Color.decode("#FFFFFF"));
         panel.add(citizenPhoto);
 
@@ -120,12 +256,12 @@ public class CitizenDetails extends JFrame {
         citizenTitle.setBounds(250, 350, 141, 32);
         panel.add(citizenTitle);
 
-        JLabel citizen = new JLabel();
-        citizen.setText("20229821");
-        citizen.setFont(new Font("Jost", Font.PLAIN, 15));
-        citizen.setForeground(Color.decode("#415EB6"));
-        citizen.setBounds(335, 350, 141, 32);
-        panel.add(citizen);
+        JLabel citizenID = new JLabel();
+        citizenID.setText(String.valueOf(citizen.getCitizenshipNo()));
+        citizenID.setFont(new Font("Jost", Font.PLAIN, 15));
+        citizenID.setForeground(Color.decode("#415EB6"));
+        citizenID.setBounds(335, 350, 141, 32);
+        panel.add(citizenID);
 
         JLabel firstNameTitle = new JLabel();
         firstNameTitle.setText("First Name");
@@ -163,35 +299,39 @@ public class CitizenDetails extends JFrame {
         panel.add(addressTitle);
 
         JLabel firstName = new JLabel();
-        firstName.setText("John");
+        firstName.setText(citizen.getFirstName());
         firstName.setFont(new Font("Jost", Font.PLAIN, 15));
         firstName.setForeground(Color.decode("#415EB6"));
         firstName.setBounds(580, 180, 141, 32);
         panel.add(firstName);
 
         JLabel middleName = new JLabel();
-        middleName.setText("me");
+        if (citizen.getMiddleName() != null) {
+            middleName.setText(citizen.getMiddleName());
+        } else {
+            middleName.setText("-");
+        }
         middleName.setFont(new Font("Jost", Font.PLAIN, 15));
         middleName.setForeground(Color.decode("#415EB6"));
         middleName.setBounds(580, 216, 141, 32);
         panel.add(middleName);
 
         JLabel lastName = new JLabel();
-        lastName.setText("Cena");
+        lastName.setText(citizen.getLastName());
         lastName.setFont(new Font("Jost", Font.PLAIN, 15));
         lastName.setForeground(Color.decode("#415EB6"));
         lastName.setBounds(580, 252, 141, 32);
         panel.add(lastName);
 
         JLabel dob = new JLabel();
-        dob.setText("1981-04-01");
+        dob.setText(String.valueOf(citizen.getDOB()));
         dob.setFont(new Font("Jost", Font.PLAIN, 15));
         dob.setForeground(Color.decode("#415EB6"));
         dob.setBounds(580, 288, 141, 32);
         panel.add(dob);
 
         JLabel address = new JLabel();
-        address.setText("Address");
+        address.setText(citizen.getTemporaryAddress());
         address.setFont(new Font("Jost", Font.PLAIN, 15));
         address.setForeground(Color.decode("#415EB6"));
         address.setBounds(580, 323, 141, 32);
@@ -204,54 +344,54 @@ public class CitizenDetails extends JFrame {
         firTitle.setBounds(766, 180, 141, 32);
         panel.add(firTitle);
 
-        JLabel chargesTitle = new JLabel();
-        chargesTitle.setText("Charges");
-        chargesTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        chargesTitle.setForeground(new Color(0, 0, 0, 105));
-        chargesTitle.setBounds(766, 216, 141, 32);
-        panel.add(chargesTitle);
+        JLabel pendingTitle = new JLabel();
+        pendingTitle.setText("Pending F.I.Rs");
+        pendingTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        pendingTitle.setForeground(new Color(0, 0, 0, 105));
+        pendingTitle.setBounds(766, 216, 161, 32);
+        panel.add(pendingTitle);
+
+        JLabel ongoingTitle = new JLabel();
+        ongoingTitle.setText("Ongoing Cases");
+        ongoingTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        ongoingTitle.setForeground(new Color(0, 0, 0, 105));
+        ongoingTitle.setBounds(766, 252, 141, 32);
+        panel.add(ongoingTitle);
 
         JLabel convictionsTitle = new JLabel();
         convictionsTitle.setText("Convictions");
         convictionsTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        convictionsTitle.setForeground(new Color(0, 0, 0, 105));
-        convictionsTitle.setBounds(766, 252, 141, 32);
+        convictionsTitle.setForeground(Color.decode("#8B8A8A"));
+        convictionsTitle.setBounds(766, 288, 141, 52);
         panel.add(convictionsTitle);
 
-        JLabel outConvictionsTitle = new JLabel();
-        outConvictionsTitle.setText("<html>Outstanding<br>Convictions</html>");
-        outConvictionsTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        outConvictionsTitle.setForeground(Color.decode("#8B8A8A"));
-        outConvictionsTitle.setBounds(766, 288, 141, 52);
-        panel.add(outConvictionsTitle);
-
         JLabel firs = new JLabel();
-        firs.setText("12");
+        firs.setText(String.valueOf(firController.filterByStatus("*", citizen.getCitizenshipNo()).size()));
         firs.setFont(new Font("Jost", Font.PLAIN, 15));
         firs.setForeground(Color.decode("#415EB6"));
         firs.setBounds(862, 180, 141, 32);
         panel.add(firs);
 
-        JLabel charges = new JLabel();
-        charges.setText("10");
-        charges.setFont(new Font("Jost", Font.PLAIN, 15));
-        charges.setForeground(Color.decode("#415EB6"));
-        charges.setBounds(862, 216, 141, 32);
-        panel.add(charges);
+        JLabel pending = new JLabel();
+        pending.setText(String.valueOf(firController.filterByStatus(0, citizen.getCitizenshipNo()).size()));
+        pending.setFont(new Font("Jost", Font.PLAIN, 15));
+        pending.setForeground(Color.decode("#415EB6"));
+        pending.setBounds(862, 216, 141, 32);
+        panel.add(pending);
+
+        JLabel ongoing = new JLabel();
+        ongoing.setText(String.valueOf(firController.filterByStatus(1, citizen.getCitizenshipNo()).size()));
+        ongoing.setFont(new Font("Jost", Font.PLAIN, 15));
+        ongoing.setForeground(Color.decode("#415EB6"));
+        ongoing.setBounds(862, 252, 141, 32);
+        panel.add(ongoing);
 
         JLabel convictions = new JLabel();
-        convictions.setText("1");
+        convictions.setText(String.valueOf(firController.filterByStatus(2, citizen.getCitizenshipNo()).size()));
         convictions.setFont(new Font("Jost", Font.PLAIN, 15));
         convictions.setForeground(Color.decode("#415EB6"));
-        convictions.setBounds(862, 252, 141, 32);
+        convictions.setBounds(862, 298, 141, 32);
         panel.add(convictions);
-
-        JLabel outConvictions = new JLabel();
-        outConvictions.setText("1");
-        outConvictions.setFont(new Font("Jost", Font.PLAIN, 15));
-        outConvictions.setForeground(Color.decode("#415EB6"));
-        outConvictions.setBounds(862, 298, 141, 32);
-        panel.add(outConvictions);
 
         JLabel recordDetails = new JLabel();
         recordDetails.setText("Record Details");
@@ -273,33 +413,33 @@ public class CitizenDetails extends JFrame {
         offenceDateTitle.setBounds(250, 473, 141, 32);
         panel.add(offenceDateTitle);
 
-        JLabel offenceTitle = new JLabel();
-        offenceTitle.setText("Offense");
-        offenceTitle.setFont(new Font("Jost", Font.PLAIN, 14));
-        offenceTitle.setForeground(new Color(0, 0, 0, 115));
-        offenceTitle.setBounds(482, 473, 141, 32);
-        panel.add(offenceTitle);
+        JLabel typeTitle = new JLabel();
+        typeTitle.setText("Type");
+        typeTitle.setFont(new Font("Jost", Font.PLAIN, 14));
+        typeTitle.setForeground(new Color(0, 0, 0, 115));
+        typeTitle.setBounds(482, 473, 141, 32);
+        panel.add(typeTitle);
 
-        JLabel dispositionTitle = new JLabel();
-        dispositionTitle.setText("Disposition");
-        dispositionTitle.setFont(new Font("Jost", Font.PLAIN, 14));
-        dispositionTitle.setForeground(new Color(0, 0, 0, 115));
-        dispositionTitle.setBounds(685, 473, 141, 32);
-        panel.add(dispositionTitle);
+        JLabel roleTitle = new JLabel();
+        roleTitle.setText("Role");
+        roleTitle.setFont(new Font("Jost", Font.PLAIN, 14));
+        roleTitle.setForeground(new Color(0, 0, 0, 115));
+        roleTitle.setBounds(635, 473, 141, 32);
+        panel.add(roleTitle);
 
-        JLabel offenceLocationTitle = new JLabel();
-        offenceLocationTitle.setText("Offense Location");
-        offenceLocationTitle.setFont(new Font("Jost", Font.PLAIN, 14));
-        offenceLocationTitle.setForeground(new Color(0, 0, 0, 115));
-        offenceLocationTitle.setBounds(823, 473, 141, 32);
-        panel.add(offenceLocationTitle);
+        JLabel statusTitle = new JLabel();
+        statusTitle.setText("Status");
+        statusTitle.setFont(new Font("Jost", Font.PLAIN, 14));
+        statusTitle.setForeground(new Color(0, 0, 0, 115));
+        statusTitle.setBounds(793, 473, 141, 32);
+        panel.add(statusTitle);
 
-        JLabel sentenceTitle = new JLabel();
-        sentenceTitle.setText("Sentence");
-        sentenceTitle.setFont(new Font("Jost", Font.PLAIN, 14));
-        sentenceTitle.setForeground(new Color(0, 0, 0, 115));
-        sentenceTitle.setBounds(976, 473, 141, 32);
-        panel.add(sentenceTitle);
+        JLabel detailsTitle = new JLabel();
+        detailsTitle.setText("Details");
+        detailsTitle.setFont(new Font("Jost", Font.PLAIN, 14));
+        detailsTitle.setForeground(new Color(0, 0, 0, 115));
+        detailsTitle.setBounds(936, 473, 141, 32);
+        panel.add(detailsTitle);
 
         JLabel tableMiddle = new JLabel("");
         tableMiddle.setBackground(new Color(0, 0, 0, 46));
@@ -307,225 +447,24 @@ public class CitizenDetails extends JFrame {
         tableMiddle.setOpaque(true);
         panel.add(tableMiddle);
 
-        JLabel offenceDate = new JLabel();
-        offenceDate.setText("11/02/23");
-        offenceDate.setFont(new Font("Jost", Font.PLAIN, 14));
-        offenceDate.setForeground(Color.decode("#000000"));
-        offenceDate.setBounds(250, 518, 141, 32);
-        panel.add(offenceDate);
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(251, 514, 872, 173);
+        scrollPane.setBorder(null);
+        scrollPane.getViewport().setBackground(Color.decode("#FFFF"));
+        panel.add(scrollPane);
 
-        JTextArea offence = new JTextArea();
-        offence.setText("Manufacture and distribution of heroin near a school");
-        offence.setBackground(Color.decode("#FFFFFF"));
-        offence.setFont(new Font("Jost", Font.PLAIN, 14));
-        offence.setForeground(Color.decode("#000000"));
-        offence.setBounds(400, 518, 241, 45);
-        offence.setBorder(null);
-        offence.setEditable(false);
-        offence.setLineWrap(true);
-        offence.setWrapStyleWord(true);
-        panel.add(offence);
+        JPanel containerPanel = new JPanel();
+        containerPanel.setLayout(new BoxLayout(containerPanel, BoxLayout.Y_AXIS));
+        containerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        containerPanel.setBackground(Color.decode("#FFFFFF"));
 
-        JTextArea disposition = new JTextArea();
-        disposition.setText("Convicted as Minor");
-        disposition.setBackground(Color.decode("#FFFFFF"));
-        disposition.setFont(new Font("Jost", Font.PLAIN, 14));
-        disposition.setForeground(Color.decode("#000000"));
-        disposition.setBounds(670, 518, 125, 45);
-        disposition.setBorder(null);
-        disposition.setEditable(false);
-        disposition.setLineWrap(true);
-        disposition.setWrapStyleWord(true);
-        panel.add(disposition);
+        for (Fir fir : firController.filterByStatus("*", citizen.getCitizenshipNo())) {
+            JPanel panel = createPanel(fir, citizen.getCitizenshipNo());
+            containerPanel.add(panel);
+            containerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        }
 
-        JTextArea offenceLocation = new JTextArea();
-        offenceLocation.setText("Dilibazar,KTM");
-        offenceLocation.setBackground(Color.decode("#FFFFFF"));
-        offenceLocation.setFont(new Font("Jost", Font.PLAIN, 14));
-        offenceLocation.setForeground(Color.decode("#000000"));
-        offenceLocation.setBounds(825, 518, 108, 45);
-        offenceLocation.setBorder(null);
-        offenceLocation.setEditable(false);
-        offenceLocation.setLineWrap(true);
-        offenceLocation.setWrapStyleWord(true);
-        panel.add(offenceLocation);
-
-        JTextArea sentence = new JTextArea();
-        sentence.setText("Home Confinement, Probation");
-        sentence.setBackground(Color.decode("#FFFFFF"));
-        sentence.setFont(new Font("Jost", Font.PLAIN, 14));
-        sentence.setForeground(Color.decode("#000000"));
-        sentence.setBounds(965, 518, 178, 45);
-        sentence.setBorder(null);
-        sentence.setEditable(false);
-        sentence.setLineWrap(true);
-        sentence.setWrapStyleWord(true);
-        panel.add(sentence);
-
-        JLabel offenceDate2 = new JLabel();
-        offenceDate2.setText("11/02/23");
-        offenceDate2.setFont(new Font("Jost", Font.PLAIN, 14));
-        offenceDate2.setForeground(Color.decode("#000000"));
-        offenceDate2.setBounds(250, 568, 141, 32);
-        panel.add(offenceDate2);
-
-        JTextArea offence2 = new JTextArea();
-        offence2.setText("Manufacture and distribution of heroin near a school");
-        offence2.setBackground(Color.decode("#FFFFFF"));
-        offence2.setFont(new Font("Jost", Font.PLAIN, 14));
-        offence2.setForeground(Color.decode("#000000"));
-        offence2.setBounds(400, 568, 241, 45);
-        offence2.setBorder(null);
-        offence2.setEditable(false);
-        offence2.setLineWrap(true);
-        offence2.setWrapStyleWord(true);
-        panel.add(offence2);
-
-        JTextArea disposition2 = new JTextArea();
-        disposition2.setText("Convicted as Minor");
-        disposition2.setBackground(Color.decode("#FFFFFF"));
-        disposition2.setFont(new Font("Jost", Font.PLAIN, 14));
-        disposition2.setForeground(Color.decode("#000000"));
-        disposition2.setBounds(670, 568, 125, 45);
-        disposition2.setBorder(null);
-        disposition2.setEditable(false);
-        disposition2.setLineWrap(true);
-        disposition2.setWrapStyleWord(true);
-        panel.add(disposition2);
-
-        JTextArea offenceLocation2 = new JTextArea();
-        offenceLocation2.setText("Dilibazar,KTM");
-        offenceLocation2.setBackground(Color.decode("#FFFFFF"));
-        offenceLocation2.setFont(new Font("Jost", Font.PLAIN, 14));
-        offenceLocation2.setForeground(Color.decode("#000000"));
-        offenceLocation2.setBounds(825, 568, 108, 45);
-        offenceLocation2.setBorder(null);
-        offenceLocation2.setEditable(false);
-        offenceLocation2.setLineWrap(true);
-        offenceLocation2.setWrapStyleWord(true);
-        panel.add(offenceLocation2);
-
-        JTextArea sentence2 = new JTextArea();
-        sentence2.setText("Home Confinement, Probation");
-        sentence2.setBackground(Color.decode("#FFFFFF"));
-        sentence2.setFont(new Font("Jost", Font.PLAIN, 14));
-        sentence2.setForeground(Color.decode("#000000"));
-        sentence2.setBounds(965, 568, 178, 45);
-        sentence2.setBorder(null);
-        sentence2.setEditable(false);
-        sentence2.setLineWrap(true);
-        sentence2.setWrapStyleWord(true);
-        panel.add(sentence2);
-
-        JLabel offenceDate3 = new JLabel();
-        offenceDate3.setText("11/02/23");
-        offenceDate3.setFont(new Font("Jost", Font.PLAIN, 14));
-        offenceDate3.setForeground(Color.decode("#000000"));
-        offenceDate3.setBounds(250, 618, 141, 32);
-        panel.add(offenceDate3);
-
-        JTextArea offence3 = new JTextArea();
-        offence3.setText("Manufacture and distribution of heroin near a school");
-        offence3.setBackground(Color.decode("#FFFFFF"));
-        offence3.setFont(new Font("Jost", Font.PLAIN, 14));
-        offence3.setForeground(Color.decode("#000000"));
-        offence3.setBounds(400, 618, 241, 45);
-        offence3.setBorder(null);
-        offence3.setEditable(false);
-        offence3.setLineWrap(true);
-        offence3.setWrapStyleWord(true);
-        panel.add(offence3);
-
-        JTextArea disposition3 = new JTextArea();
-        disposition3.setText("Convicted as Minor");
-        disposition3.setBackground(Color.decode("#FFFFFF"));
-        disposition3.setFont(new Font("Jost", Font.PLAIN, 14));
-        disposition3.setForeground(Color.decode("#000000"));
-        disposition3.setBounds(670, 618, 125, 45);
-        disposition3.setBorder(null);
-        disposition3.setEditable(false);
-        disposition3.setLineWrap(true);
-        disposition3.setWrapStyleWord(true);
-        panel.add(disposition3);
-
-        JTextArea offenceLocation3 = new JTextArea();
-        offenceLocation3.setText("Dilibazar,KTM");
-        offenceLocation3.setBackground(Color.decode("#FFFFFF"));
-        offenceLocation3.setFont(new Font("Jost", Font.PLAIN, 14));
-        offenceLocation3.setForeground(Color.decode("#000000"));
-        offenceLocation3.setBounds(825, 618, 108, 45);
-        offenceLocation3.setBorder(null);
-        offenceLocation3.setEditable(false);
-        offenceLocation3.setLineWrap(true);
-        offenceLocation3.setWrapStyleWord(true);
-        panel.add(offenceLocation3);
-
-        JTextArea sentence3 = new JTextArea();
-        sentence3.setText("Home Confinement, Probation");
-        sentence3.setBackground(Color.decode("#FFFFFF"));
-        sentence3.setFont(new Font("Jost", Font.PLAIN, 14));
-        sentence3.setForeground(Color.decode("#000000"));
-        sentence3.setBounds(965, 618, 178, 45);
-        sentence3.setBorder(null);
-        sentence3.setEditable(false);
-        sentence3.setLineWrap(true);
-        sentence3.setWrapStyleWord(true);
-        panel.add(sentence3);
-
-        JLabel offenceDate4 = new JLabel();
-        offenceDate4.setText("11/02/23");
-        offenceDate4.setFont(new Font("Jost", Font.PLAIN, 14));
-        offenceDate4.setForeground(Color.decode("#000000"));
-        offenceDate4.setBounds(250, 668, 141, 32);
-        panel.add(offenceDate4);
-
-        JTextArea offence4 = new JTextArea();
-        offence4.setText("Manufacture and distribution of heroin near a school");
-        offence4.setBackground(Color.decode("#FFFFFF"));
-        offence4.setFont(new Font("Jost", Font.PLAIN, 14));
-        offence4.setForeground(Color.decode("#000000"));
-        offence4.setBounds(400, 668, 241, 45);
-        offence4.setBorder(null);
-        offence4.setEditable(false);
-        offence4.setLineWrap(true);
-        offence4.setWrapStyleWord(true);
-        panel.add(offence4);
-
-        JTextArea disposition4 = new JTextArea();
-        disposition4.setText("Convicted as Minor");
-        disposition4.setBackground(Color.decode("#FFFFFF"));
-        disposition4.setFont(new Font("Jost", Font.PLAIN, 14));
-        disposition4.setForeground(Color.decode("#000000"));
-        disposition4.setBounds(670, 668, 125, 45);
-        disposition4.setBorder(null);
-        disposition4.setEditable(false);
-        disposition4.setLineWrap(true);
-        disposition4.setWrapStyleWord(true);
-        panel.add(disposition4);
-
-        JTextArea offenceLocation4 = new JTextArea();
-        offenceLocation4.setText("Dilibazar,KTM");
-        offenceLocation4.setBackground(Color.decode("#FFFFFF"));
-        offenceLocation4.setFont(new Font("Jost", Font.PLAIN, 14));
-        offenceLocation4.setForeground(Color.decode("#000000"));
-        offenceLocation4.setBounds(825, 668, 108, 45);
-        offenceLocation4.setBorder(null);
-        offenceLocation4.setEditable(false);
-        offenceLocation4.setLineWrap(true);
-        offenceLocation4.setWrapStyleWord(true);
-        panel.add(offenceLocation4);
-
-        JTextArea sentence4 = new JTextArea();
-        sentence4.setText("Home Confinement, Probation");
-        sentence4.setBackground(Color.decode("#FFFFFF"));
-        sentence4.setFont(new Font("Jost", Font.PLAIN, 14));
-        sentence4.setForeground(Color.decode("#000000"));
-        sentence4.setBounds(965, 668, 178, 45);
-        sentence4.setBorder(null);
-        sentence4.setEditable(false);
-        sentence4.setLineWrap(true);
-        sentence4.setWrapStyleWord(true);
-        panel.add(sentence4);
+        scrollPane.setViewportView(containerPanel);
 
         JLabel tableBottom = new JLabel("");
         tableBottom.setBackground(new Color(0, 0, 0, 46));
@@ -555,12 +494,12 @@ public class CitizenDetails extends JFrame {
         JLabel background = new JLabel();
         background.setOpaque(true);
         background.setBackground(Color.decode("#FFFFFF"));
-        background.setBounds(0,0,1201,841);
+        background.setBounds(0, 0, 1201, 841);
         panel.add(background);
+
     }
 
     public JPanel getFrame() {
         return panel;
     }
 }
-
