@@ -11,10 +11,7 @@ public class Encoder{
         return (hashedData);
     }
 
-    public static int verify (String source, String targetHash){
-        if(BCrypt.checkpw(source, targetHash)){
-            return(1);
-        }
-        return(0);
+    public static boolean verify (String source, String targetHash){
+        return(BCrypt.checkpw(source, targetHash));
     }
 }

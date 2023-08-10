@@ -3,6 +3,8 @@ package views;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
@@ -14,9 +16,13 @@ import javax.swing.JTextField;
 
 import org.apache.batik.gvt.text.GVTAttributedCharacterIterator.TextAttribute;
 
+import controller.CaseController;
 import controller.CitizenController;
+import controller.FirController;
 import controller.PoliceController;
+import controller.controllerImpl.CaseControllerImpl;
 import controller.controllerImpl.CitizenControllerImpl;
+import controller.controllerImpl.FirControllerImpl;
 import controller.controllerImpl.PoliceControllerImpl;
 import plugins.MediaFormat;
 import plugins.ImagePlugins.ImagePlugins;
@@ -28,15 +34,21 @@ import views.widget.DateTimeWidget;
 public class PoliceDashboard extends JFrame {
 	private final CitizenController citizenController;
 	private final PoliceController policeController;
+	private final FirController firController;
+	private final CaseController caseController;
 	private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
 	private JFrame frame;
 	private JPanel panel;
 	private Font font;
+	private App app;
 	private Map<TextAttribute, Object> attributes;
 
-	public PoliceDashboard() {
-		this.citizenController = new CitizenControllerImpl();
-		this.policeController = new PoliceControllerImpl(panel);
+	public PoliceDashboard(App app) {
+		this.citizenController = new CitizenControllerImpl(app);
+		this.policeController = new PoliceControllerImpl(panel, app);
+		this.firController = new FirControllerImpl(app);
+		this.caseController = new CaseControllerImpl(app);
+		this.app = app;
 		initialize();
 	}
 
@@ -61,17 +73,17 @@ public class PoliceDashboard extends JFrame {
 
 		JLabel parentPageTitle = new JLabel();
 		parentPageTitle.setText("F.I.R");
+		if (app.context.getRole() == "police") {
+			parentPageTitle.setText("F.I.R is police");
+		} else {
+			parentPageTitle.setText("F.I.R is oic");
+		}
 		parentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
 		parentPageTitle.setForeground(Color.decode("#002349"));
 		parentPageTitle.setBounds(239, 61, 141, 32);
 		panel.add(parentPageTitle);
 
 		DateTimeWidget.addWidget(panel);
-
-		JLabel dashboardIcon = new JLabel();
-		dashboardIcon.setBounds(36, 125, 35, 35);
-		dashboardIcon.setIcon(new ImageIcon("resources/artboards/dash-icon-default.png"));
-		panel.add(dashboardIcon);
 
 		JLabel recordsIcon = new JLabel();
 		recordsIcon.setBounds(39, 285, 35, 35);
@@ -123,18 +135,24 @@ public class PoliceDashboard extends JFrame {
 		allFIRsLine.setOpaque(true);
 		panel.add(allFIRsLine);
 
-        JLabel viewAllFIRs = new JLabel();
+		JLabel viewAllFIRs = new JLabel();
 		viewAllFIRs.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		viewAllFIRs.setFont(new Font("Jost", Font.PLAIN, 12));
-		viewAllFIRs.setForeground(new Color(22, 91, 191,180));
+		viewAllFIRs.setForeground(new Color(22, 91, 191, 180));
 		viewAllFIRs.setBounds(464, 358, 142, 55);
 		viewAllFIRs.setText("View more");
 		panel.add(viewAllFIRs);
 
-        JLabel viewAllFIRsOverlay = new JLabel();
-        viewAllFIRsOverlay.setBounds(464, 358, 142, 55);
-        viewAllFIRsOverlay.addMouseListener(Hover.animate(viewAllFIRs, 464, 504));
-        panel.add(viewAllFIRsOverlay);
+		JLabel viewAllFIRsOverlay = new JLabel();
+		viewAllFIRsOverlay.setBounds(464, 358, 142, 55);
+		viewAllFIRsOverlay.addMouseListener(Hover.animate(viewAllFIRs, 464, 504));
+		viewAllFIRsOverlay.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				firController.getAllFir();
+			}
+		});
+		panel.add(viewAllFIRsOverlay);
 
 		JLabel allFIRsText = new JLabel();
 		allFIRsText.setFont(new Font("Jost", Font.PLAIN, 14));
@@ -155,7 +173,6 @@ public class PoliceDashboard extends JFrame {
 		allFIRsDescription.setFont(font);
 		panel.add(allFIRsDescription);
 
-
 		JLabel newFIRsIcon = new JLabel();
 		newFIRsIcon.setBounds(774, 301, 53, 53);
 		newFIRsIcon.setOpaque(true);
@@ -169,13 +186,19 @@ public class PoliceDashboard extends JFrame {
 		newFIRsLine.setOpaque(true);
 		panel.add(newFIRsLine);
 
-        JLabel viewNewFIRs = new JLabel();
-		viewNewFIRs.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		viewNewFIRs.setFont(new Font("Jost", Font.PLAIN, 12));
-		viewNewFIRs.setForeground(new Color(22, 91, 191,180));
-		viewNewFIRs.setBounds(887, 358, 142, 55);
-		viewNewFIRs.setText("View more");
-		panel.add(viewNewFIRs);
+		JLabel addNewFir = new JLabel();
+		addNewFir.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		addNewFir.setFont(new Font("Jost", Font.PLAIN, 12));
+		addNewFir.setForeground(new Color(22, 91, 191, 180));
+		addNewFir.setBounds(887, 358, 142, 55);
+		addNewFir.setText("View more");
+		addNewFir.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				firController.getCreateFirPage();
+			}
+		});
+		panel.add(addNewFir);
 
 		JLabel newFIRsText = new JLabel();
 		newFIRsText.setFont(new Font("Jost", Font.PLAIN, 14));
@@ -209,10 +232,10 @@ public class PoliceDashboard extends JFrame {
 		myFIRsLine.setOpaque(true);
 		panel.add(myFIRsLine);
 
-        JLabel viewMyFirs = new JLabel();
+		JLabel viewMyFirs = new JLabel();
 		viewMyFirs.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		viewMyFirs.setFont(new Font("Jost", Font.PLAIN, 12));
-		viewMyFirs.setForeground(new Color(22, 91, 191,180));
+		viewMyFirs.setForeground(new Color(22, 91, 191, 180));
 		viewMyFirs.setBounds(670, 595, 142, 55);
 		viewMyFirs.setText("View more");
 		panel.add(viewMyFirs);
@@ -234,6 +257,13 @@ public class PoliceDashboard extends JFrame {
 		myFIRsDescription.setWrapStyleWord(true);
 		font = allFIRsText.getFont();
 		myFIRsDescription.setFont(font);
+		myFIRsDescription.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		myFIRsDescription.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				caseController.getAllCases();
+			}
+		});
 		panel.add(myFIRsDescription);
 
 		JLabel backgroundLogin = new JLabel();

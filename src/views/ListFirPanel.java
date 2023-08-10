@@ -1,8 +1,14 @@
 package views;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
 
@@ -37,21 +43,25 @@ import utils.ui.graphic.RoundedBorderLabel;
 import views.widget.DateTimeWidget;
 
 public class ListFirPanel extends JFrame {
-    private final CitizenController citizenController;
-    private final FirController firController;
+    private static CitizenController citizenController;
+    private static PoliceController policeController;
+    private static FirController firController;
     private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
     private JFrame frame;
     private JPanel panel;
     private Font font;
+    private List<Fir> firs;
     private Map<TextAttribute, Object> attributes;
 
-    public ListFirPanel() {
-        this.citizenController = new CitizenControllerImpl();
-        this.firController = new FirControllerImpl();
+    public ListFirPanel(List<Fir> firs, App app) {
+        this.citizenController = new CitizenControllerImpl(app);
+        this.policeController = new PoliceControllerImpl(panel, app);
+        this.firController = new FirControllerImpl(app);
+        this.firs = firs;
         initialize();
     }
 
-    private static JPanel createPanel(Fir fir){
+    private static JPanel createPanel(Fir fir) {
 
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(759, 117));
@@ -59,115 +69,134 @@ public class ListFirPanel extends JFrame {
         panel.setBackground(null);
         panel.setLayout(null);
 
+        int statusValue = fir.getStatus();
+        Color titleColor = (statusValue == 0) ? Color.decode("#AC4040")
+                : (statusValue == 1) ? Color.decode("#415EB6") : Color.decode("#23B0B0");
+
+        Color detailColor = (statusValue == 0) ? Color.decode("#CC8686")
+                : (statusValue == 1) ? Color.decode("#93AEF8") : Color.decode("#75D0D0");
+
+        Color backgroundColor = (statusValue == 0) ? Color.decode("#FEEEEE")
+                : (statusValue == 1) ? Color.decode("#EEF7FE") : Color.decode("#F0FFFF");
+
         JLabel idTitle = new JLabel();
         idTitle.setText("Record ID");
         idTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        idTitle.setForeground(Color.decode("#AC4040"));
-        idTitle.setBounds(59, 23, 60, 20);
+        idTitle.setForeground(titleColor);
+        idTitle.setBounds(59, 23, 120, 20);
         panel.add(idTitle);
 
         JLabel recordNameTitle = new JLabel();
         recordNameTitle.setText("Record Name");
         recordNameTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        recordNameTitle.setForeground(Color.decode("#AC4040"));
-        recordNameTitle.setBounds(59, 23, 141, 32);
+        recordNameTitle.setForeground(titleColor);
+        recordNameTitle.setBounds(59, 48, 160, 22);
         panel.add(recordNameTitle);
 
         JLabel recordDateTitle = new JLabel();
         recordDateTitle.setText("Record Date");
         recordDateTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        recordDateTitle.setForeground(Color.decode("#AC4040"));
-        recordDateTitle.setBounds(239, 305, 141, 32);
+        recordDateTitle.setForeground(titleColor);
+        recordDateTitle.setBounds(59, 73, 160, 22);
         panel.add(recordDateTitle);
 
         JLabel id = new JLabel();
-        id.setText("9876678");
+        id.setText(String.valueOf(fir.getFirID()));
         id.setFont(new Font("Jost", Font.PLAIN, 15));
-        id.setForeground(Color.decode("#CC8686"));
-        id.setBounds(360, 252, 141, 32);
+        id.setForeground(detailColor);
+        id.setBounds(161, 23, 100, 20);
         panel.add(id);
 
         JLabel recordName = new JLabel();
-        recordName.setText("Auto Theft");
+        recordName.setText(fir.getCategory());
         recordName.setFont(new Font("Jost", Font.PLAIN, 15));
-        recordName.setForeground(Color.decode("#CC8686"));
-        recordName.setBounds(360, 278, 141, 32);
+        recordName.setForeground(detailColor);
+        recordName.setBounds(161, 44, 181, 32);
         panel.add(recordName);
 
         JLabel recordDate = new JLabel();
-        recordDate.setText("12-09-2022");
+        recordDate.setText(String.valueOf(fir.getFiledDate()));
         recordDate.setFont(new Font("Jost", Font.PLAIN, 15));
-        recordDate.setForeground(Color.decode("#CC8686"));
-        recordDate.setBounds(360, 305, 141, 32);
+        recordDate.setForeground(detailColor);
+        recordDate.setBounds(161, 70, 141, 32);
         panel.add(recordDate);
+
+        JLabel fregisteredByTitle = new JLabel();
+        fregisteredByTitle.setText("Registered By");
+        fregisteredByTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        fregisteredByTitle.setForeground(titleColor);
+        fregisteredByTitle.setBounds(339, 20, 141, 32);
+        panel.add(fregisteredByTitle);
 
         JLabel filedByTitle = new JLabel();
         filedByTitle.setText("Filed By");
         filedByTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        filedByTitle.setForeground(Color.decode("#AC4040"));
-        filedByTitle.setBounds(569, 252, 141, 32);
+        filedByTitle.setForeground(titleColor);
+        filedByTitle.setBounds(339, 44, 141, 32);
         panel.add(filedByTitle);
 
-        JLabel broughtByTitle = new JLabel();
-        broughtByTitle.setText("Brought By");
-        broughtByTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        broughtByTitle.setForeground(Color.decode("#AC4040"));
-        broughtByTitle.setBounds(569, 278, 141, 32);
-        panel.add(broughtByTitle);
+        JLabel filedAgainstTitle = new JLabel();
+        filedAgainstTitle.setText("Filed Against");
+        filedAgainstTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        filedAgainstTitle.setForeground(titleColor);
+        filedAgainstTitle.setBounds(339, 70, 141, 32);
+        panel.add(filedAgainstTitle);
 
-        JLabel broughtAgainstTitle = new JLabel();
-        broughtAgainstTitle.setText("Brought Against");
-        broughtAgainstTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        broughtAgainstTitle.setForeground(Color.decode("#AC4040"));
-        broughtAgainstTitle.setBounds(569, 305, 141, 32);
-        panel.add(broughtAgainstTitle);
+        JLabel registeredBy = new JLabel();
+        registeredBy.setText(policeController.search(fir.getRegisteredBy()).getCitizen().getFullName());
+        registeredBy.setFont(new Font("Jost", Font.PLAIN, 15));
+        registeredBy.setForeground(detailColor);
+        registeredBy.setBounds(457, 20, 241, 32);
+        panel.add(registeredBy);
 
         JLabel filedBy = new JLabel();
-        filedBy.setText("Insp. Ram Dangol");
+        filedBy.setText(citizenController.search(fir.getFiledBy()).getFullName());
         filedBy.setFont(new Font("Jost", Font.PLAIN, 15));
-        filedBy.setForeground(Color.decode("#CC8686"));
-        filedBy.setBounds(690, 252, 141, 32);
+        filedBy.setForeground(detailColor);
+        filedBy.setBounds(457, 44, 241, 32);
         panel.add(filedBy);
 
-        JLabel broughtBy = new JLabel();
-        broughtBy.setText("Hari Prasad");
-        broughtBy.setFont(new Font("Jost", Font.PLAIN, 15));
-        broughtBy.setForeground(Color.decode("#CC8686"));
-        broughtBy.setBounds(690, 278, 141, 32);
-        panel.add(broughtBy);
+        JLabel filedAgainst = new JLabel();
+        filedAgainst.setText(citizenController.search(fir.getFiledAgainst()).getFullName());
+        filedAgainst.setFont(new Font("Jost", Font.PLAIN, 15));
+        filedAgainst.setForeground(detailColor);
+        filedAgainst.setBounds(457, 70, 241, 32);
+        panel.add(filedAgainst);
 
-        JLabel broughtAgainst = new JLabel();
-        broughtAgainst.setText("Bhuwan Rawat");
-        broughtAgainst.setFont(new Font("Jost", Font.PLAIN, 15));
-        broughtAgainst.setForeground(Color.decode("#CC8686"));
-        broughtAgainst.setBounds(690, 305, 141, 32);
-        panel.add(broughtAgainst);
+        JLabel status = new JLabel();
+        String statusText = (statusValue == 0) ? "Pending" : (statusValue == 1) ? "Ongoing" : "Resolved";
+        status.setText(statusText);
+        status.setText(statusText);
+        status.setFont(new Font("Jost", Font.BOLD, 15));
+        status.setForeground(titleColor);
+        status.setBounds(673, 29, 141, 32);
+        panel.add(status);
 
-        JLabel pending = new JLabel();
-        pending.setText("Pending");
-        pending.setFont(new Font("Jost", Font.BOLD, 15));
-        pending.setForeground(Color.decode("#AC4040"));
-        pending.setBounds(940, 258, 141, 32);
-        panel.add(pending);
-
-        RoundedLabel details = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
-        details.setBounds(930, 300, 80, 28);
-        details.setBackground(Color.decode("#FEEEEE"));
+        RoundedLabel details = new RoundedLabel("", 20, backgroundColor, 9);
+        details.setBounds(670, 69, 65, 18);
+        details.setBackground(backgroundColor);
         details.setText("Details");
         details.setFont(new Font("Jost", Font.PLAIN, 14));
         details.setForeground(Color.decode("#677BC1"));
         details.setHorizontalAlignment(SwingConstants.CENTER);
         details.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 12));
+        details.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        details.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e){
+                firController.getDetail(fir);
+            }
+        });
         panel.add(details);
 
-        RoundedLabel pendingBackground = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
-        pendingBackground.setBounds(210, 235, 860, 117);
-        pendingBackground.setBackground(Color.decode("#FEEEEE"));
+        RoundedLabel pendingBackground = new RoundedLabel("", 20, backgroundColor, 9);
+        pendingBackground.setBounds(0, 0, 820, 117);
+        pendingBackground.setBackground(backgroundColor);
         panel.add(pendingBackground);
 
-        return(panel);
+        return (panel);
+        
     }
-
 
     public void initialize() {
 
@@ -249,123 +278,17 @@ public class ListFirPanel extends JFrame {
         search.setFont(new Font("Jost", Font.PLAIN, 14));
         search.setForeground(new Color(61, 63, 64, 180));
         search.setBounds(494, 164, 365, 30);
+        search.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        search.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    firController.fullTextSearch(search.getText());
+                }
+            }
+        });
+        
         panel.add(search);
-/* 
-        JLabel idTitle = new JLabel();
-        idTitle.setText("Record ID");
-        idTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        idTitle.setForeground(Color.decode("#AC4040"));
-        idTitle.setBounds(239, 252, 141, 32);
-        panel.add(idTitle);
-
-        JLabel recordNameTitle = new JLabel();
-        recordNameTitle.setText("Record Name");
-        recordNameTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        recordNameTitle.setForeground(Color.decode("#AC4040"));
-        recordNameTitle.setBounds(239, 278, 141, 32);
-        panel.add(recordNameTitle);
-
-        JLabel recordDateTitle = new JLabel();
-        recordDateTitle.setText("Record Date");
-        recordDateTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        recordDateTitle.setForeground(Color.decode("#AC4040"));
-        recordDateTitle.setBounds(239, 305, 141, 32);
-        panel.add(recordDateTitle);
-
-        JLabel id = new JLabel();
-        id.setText("9876678");
-        id.setFont(new Font("Jost", Font.PLAIN, 15));
-        id.setForeground(Color.decode("#CC8686"));
-        id.setBounds(360, 252, 141, 32);
-        panel.add(id);
-
-        JLabel recordName = new JLabel();
-        recordName.setText("Auto Theft");
-        recordName.setFont(new Font("Jost", Font.PLAIN, 15));
-        recordName.setForeground(Color.decode("#CC8686"));
-        recordName.setBounds(360, 278, 141, 32);
-        panel.add(recordName);
-
-        JLabel recordDate = new JLabel();
-        recordDate.setText("12-09-2022");
-        recordDate.setFont(new Font("Jost", Font.PLAIN, 15));
-        recordDate.setForeground(Color.decode("#CC8686"));
-        recordDate.setBounds(360, 305, 141, 32);
-        panel.add(recordDate);
-
-        JLabel filedByTitle = new JLabel();
-        filedByTitle.setText("Filed By");
-        filedByTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        filedByTitle.setForeground(Color.decode("#AC4040"));
-        filedByTitle.setBounds(569, 252, 141, 32);
-        panel.add(filedByTitle);
-
-        JLabel broughtByTitle = new JLabel();
-        broughtByTitle.setText("Brought By");
-        broughtByTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        broughtByTitle.setForeground(Color.decode("#AC4040"));
-        broughtByTitle.setBounds(569, 278, 141, 32);
-        panel.add(broughtByTitle);
-
-        JLabel broughtAgainstTitle = new JLabel();
-        broughtAgainstTitle.setText("Brought Against");
-        broughtAgainstTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        broughtAgainstTitle.setForeground(Color.decode("#AC4040"));
-        broughtAgainstTitle.setBounds(569, 305, 141, 32);
-        panel.add(broughtAgainstTitle);
-
-        JLabel filedBy = new JLabel();
-        filedBy.setText("Insp. Ram Dangol");
-        filedBy.setFont(new Font("Jost", Font.PLAIN, 15));
-        filedBy.setForeground(Color.decode("#CC8686"));
-        filedBy.setBounds(690, 252, 141, 32);
-        panel.add(filedBy);
-
-        JLabel broughtBy = new JLabel();
-        broughtBy.setText("Hari Prasad");
-        broughtBy.setFont(new Font("Jost", Font.PLAIN, 15));
-        broughtBy.setForeground(Color.decode("#CC8686"));
-        broughtBy.setBounds(690, 278, 141, 32);
-        panel.add(broughtBy);
-
-        JLabel broughtAgainst = new JLabel();
-        broughtAgainst.setText("Bhuwan Rawat");
-        broughtAgainst.setFont(new Font("Jost", Font.PLAIN, 15));
-        broughtAgainst.setForeground(Color.decode("#CC8686"));
-        broughtAgainst.setBounds(690, 305, 141, 32);
-        panel.add(broughtAgainst);
-
-        JLabel pending = new JLabel();
-        pending.setText("Pending");
-        pending.setFont(new Font("Jost", Font.BOLD, 15));
-        pending.setForeground(Color.decode("#AC4040"));
-        pending.setBounds(940, 258, 141, 32);
-        panel.add(pending);
-
-        RoundedLabel details = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
-        details.setBounds(930, 300, 80, 28);
-        details.setBackground(Color.decode("#FEEEEE"));
-        details.setText("Details");
-        details.setFont(new Font("Jost", Font.PLAIN, 14));
-        details.setForeground(Color.decode("#677BC1"));
-        details.setHorizontalAlignment(SwingConstants.CENTER);
-        details.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 12));
-        panel.add(details);
-
-        RoundedLabel pendingBackground = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
-        pendingBackground.setBounds(210, 235, 860, 117);
-        pendingBackground.setBackground(Color.decode("#FEEEEE"));
-        panel.add(pendingBackground);
-
-        /*RoundedLabel resolvedBackground = new RoundedLabel("", 20, Color.decode("#F0FFFF"), 9);
-        resolvedBackground.setBounds(210, 385, 860, 117);
-        resolvedBackground.setBackground(Color.decode("#F0FFFF"));
-        panel.add(resolvedBackground);*/
-
-        /*RoundedLabel ongoingBackground = new RoundedLabel("", 20, Color.decode("#EEF7FE"), 9);
-        ongoingBackground.setBounds(210, 538, 860, 117);
-        ongoingBackground.setBackground(Color.decode("#EEF7FE"));
-        panel.add(ongoingBackground);*/
 
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(232, 242, 888, 599);
@@ -378,7 +301,6 @@ public class ListFirPanel extends JFrame {
         containerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         containerPanel.setBackground(Color.decode("#FFFFFF"));
 
-        List<Fir> firs = firController.getAllFir();
         for (Fir fir : firs) {
             JPanel panel = createPanel(fir);
             containerPanel.add(panel);

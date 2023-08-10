@@ -36,9 +36,9 @@ public class RegisterPanel {
     private JFrame frame;
     private JPanel panel;
 
-    public RegisterPanel() {
-		this.citizenController = new CitizenControllerImpl();
-		this.policeController = new PoliceControllerImpl(panel);
+    public RegisterPanel(App app) {
+		this.citizenController = new CitizenControllerImpl(app);
+		this.policeController = new PoliceControllerImpl(panel, app);
 		initialize();
 	}
 
@@ -201,7 +201,7 @@ public class RegisterPanel {
 		department.setBounds(834,479,80,23);
 		panel.add(department);*/
 		
-		String ranks[] = {"Inspector", "Sub Inspector", "Head Constable", "Constable"};
+		String ranks[] = { "Inspector", "Sub Inspector", "Head Constable", "Constable"};
 		JComboBox<String> rank = new JComboBox<>(ranks);
 		rank.setSelectedItem("Inspector");
 		rank.setBounds(820,490,200,23);
@@ -242,6 +242,7 @@ public class RegisterPanel {
 		errorField.setBounds(424,254,176,20);
 		panel.add(errorField);
 
+
 		JLabel autofill = new JLabel("Autofill");
 		autofill.setFont(new Font("Jost", Font.PLAIN, 16));
 		autofill.setBackground(Color.decode("#1A75D5"));
@@ -250,7 +251,7 @@ public class RegisterPanel {
 		autofill.setForeground(new Color(255, 255, 255, 240));
 		autofill.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		autofill.setBounds(786,195,116,40);
-		autofill.addMouseListener(Hover.newColor(autofill, "#1A75D5", "165EAA"));
+		autofill.addMouseListener(Hover.newColor(autofill, "#1A75D5", "#165EAA"));
 		autofill.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){
@@ -295,7 +296,7 @@ public class RegisterPanel {
 		register.setForeground(new Color(255, 255, 255, 240));
 		register.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		register.setBounds(568,671,184,40);
-		register.addMouseListener(Hover.newColor(register, "#1A75D5", "165EAA"));
+		register.addMouseListener(Hover.newColor(register, "#1A75D5", "#165EAA"));
 		register.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){
@@ -348,4 +349,3 @@ public class RegisterPanel {
 		return panel;
 	}
 }
-

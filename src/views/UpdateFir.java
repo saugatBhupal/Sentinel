@@ -12,12 +12,15 @@ import java.time.LocalTime;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.FirController;
 import controller.controllerImpl.FirControllerImpl;
@@ -26,6 +29,7 @@ import model.Police;
 import plugins.MediaFormat;
 import plugins.ImagePlugins.ImagePlugins;
 import plugins.PluginFactory.PluginFactory;
+import utils.media.mediaUtil;
 import utils.ui.event.Focus;
 import utils.ui.event.Hover;
 import views.widget.DateTimeWidget;
@@ -37,6 +41,7 @@ public class UpdateFir extends JFrame {
     private JFrame frame;
     private JPanel panel;
     private final Fir fir;
+    private String file;
 
     public UpdateFir(App app, Fir fir) {
         this.app = app;
@@ -232,6 +237,25 @@ public class UpdateFir extends JFrame {
         addEvidence.setCursor(new Cursor(Cursor.HAND_CURSOR));
         addEvidence.setBounds(285, 595, 184, 40);
         addEvidence.addMouseListener(Hover.newColor(addEvidence, "#1A75D5", "#165EAA"));
+        addEvidence.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e){
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "png");
+                fileChooser.setFileFilter(filter);
+                int action = fileChooser.showSaveDialog(null);
+                if(action == fileChooser.APPROVE_OPTION){
+                    String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                    file = mediaUtil.saveImage(filePath);
+                    if(file != null){
+                        JOptionPane.showMessageDialog(app,"Successfully saved file");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(app, "Error saving file");
+                    }
+                }
+            }
+        });
         panel.add(addEvidence);
 
         JLabel witnessLabel = new JLabel();
@@ -247,8 +271,7 @@ public class UpdateFir extends JFrame {
         witnessField.setForeground(Color.decode("#6D6767"));
         if (fir.getWitness() != null) {
             witnessField.setText(String.valueOf(fir.getWitness()));
-        }
-        else{
+        } else {
             witnessField.addFocusListener(Focus.setPlaceholder(witnessField, "Citizen I.D / Name"));
         }
         witnessField.setBounds(750, 505, 300, 27);
@@ -297,11 +320,11 @@ public class UpdateFir extends JFrame {
                         Time.valueOf(hourField.getText() + ":" + minuteField.getText() + ":" + secondsField.getText()));
                 fir.setDescription(incidentField.getText());
                 fir.setCategory(category.getSelectedItem().toString());
-                fir.setEvidence(null);
+                fir.setEvidence(file);
                 fir.setRegisteredBy(app.context.getPolice().getPoliceID());
                 String witnessText = witnessField.getText();
-                long witnessValue = (!witnessText.isEmpty()) ? Long.parseLong(witnessText) : null;
-                fir.setWitness(witnessValue);
+                fir.setWitness(
+                        (witnessText.isEmpty() || !witnessText.matches("\\d+")) ? 0 : Long.parseLong(witnessText));
                 firController.updateFir(fir);
             }
         });

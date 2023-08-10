@@ -7,4 +7,5 @@ import model.Citizen;
 public interface CitizenDao {
     Citizen findByCitizenID(Long citizenID);
     List<Citizen> findAll();
+    List<Citizen> search(String keyword);
 }

@@ -6,28 +6,27 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.batik.gvt.text.GVTAttributedCharacterIterator.TextAttribute;
 
@@ -35,25 +34,30 @@ import controller.CaseController;
 import controller.CitizenController;
 import controller.FirController;
 import controller.PoliceController;
+import controller.VerdictController;
 import controller.controllerImpl.CaseControllerImpl;
 import controller.controllerImpl.CitizenControllerImpl;
 import controller.controllerImpl.FirControllerImpl;
 import controller.controllerImpl.PoliceControllerImpl;
+import controller.controllerImpl.VerdictControllerImpl;
 import model.Case;
 import model.Citizen;
 import model.Fir;
 import model.Log;
 import model.Police;
+import model.Verdict;
 import plugins.MediaFormat;
 import plugins.ImagePlugins.ImagePlugins;
 import plugins.PluginFactory.PluginFactory;
 import utils.dateTime.DateTimeUtil;
 import utils.generator.PasswordGenerator;
+import utils.media.mediaUtil;
 import utils.ui.event.Focus;
 import utils.ui.event.Hover;
 import utils.ui.graphic.RoundedLabel;
 import utils.ui.graphic.RoundedBorderLabel;
 import views.widget.DateTimeWidget;
+import views.widget.ImageViewerWidget;
 
 public class AssignedCaseDetailPanel extends JFrame {
     private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
@@ -61,9 +65,11 @@ public class AssignedCaseDetailPanel extends JFrame {
     private final PoliceController policeController;
     private final FirController firController;
     private final CaseController caseController;
+    private final VerdictController verdictController;
     private JFrame frame;
     private JPanel panel;
     private Font font;
+    private String file;
     private Case cs;
     private final App app;
     private final List<Log> logs;
@@ -77,12 +83,13 @@ public class AssignedCaseDetailPanel extends JFrame {
         this.policeController = new PoliceControllerImpl(panel, app);
         this.firController = new FirControllerImpl(app);
         this.caseController = new CaseControllerImpl(app);
+        this.verdictController = new VerdictControllerImpl(app);
         initialize();
     }
 
     private static JPanel createPanel(Log log) {
         JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(710, 68));
+        panel.setPreferredSize(new Dimension(700, 68));
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         panel.setBackground(null);
         panel.setLayout(null);
@@ -108,6 +115,18 @@ public class AssignedCaseDetailPanel extends JFrame {
         media.setHorizontalAlignment(SwingConstants.CENTER);
         media.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 6));
         media.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        media.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (log.getMedia() != null) {
+                    ImageViewerWidget widget = new ImageViewerWidget(log.getMedia());
+                    widget.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(panel, "No files uploaded");
+                }
+            }
+        });
+
         panel.add(media);
 
         JLabel logsDate = new JLabel();
@@ -410,79 +429,190 @@ public class AssignedCaseDetailPanel extends JFrame {
         containerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         containerPanel.setBackground(Color.decode("#FFFFFF"));
 
-        for (Log log : logs) {
-            JPanel panel = createPanel(log);
-            containerPanel.add(panel);
-            containerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        }
-
-        scrollPane.setViewportView(containerPanel);
-
-        JTextArea newLog = new JTextArea();
-        newLog.setBackground(Color.decode("#FAFAFA"));
-        newLog.setFont(new Font("Jost", Font.PLAIN, 14));
-        newLog.setForeground(Color.decode("#165BBF"));
-        newLog.setBounds(306, 626, 558, 38);
-        newLog.setBorder(null);
-        newLog.setEditable(true);
-        newLog.addFocusListener(Focus.setPlaceholderArea(newLog, "Enter new case log"));
-        newLog.setLineWrap(true);
-        newLog.setWrapStyleWord(true);
-        panel.add(newLog);
-
-        RoundedLabel newLogsBackground = new RoundedLabel("", 10, Color.decode("#F2F4F7"), 12);
-        newLogsBackground.setBounds(286, 620, 600, 54);
-        newLogsBackground.setBackground(Color.decode("#FAFAFA"));
-        newLogsBackground.setBorder(new RoundedBorderLabel(Color.decode("#F2F4F7"), 1, 12));
-        panel.add(newLogsBackground);
-
-        RoundedLabel addEvidence = new RoundedLabel("", 10, Color.decode("#FEEEEE"), 9);
-        addEvidence.setBounds(896, 634, 98, 28);
-        addEvidence.setBackground(Color.decode("#1A75D5"));
-        addEvidence.setText("+ Evidence");
-        addEvidence.setFont(new Font("Jost", Font.PLAIN, 14));
-        addEvidence.setForeground(Color.decode("#FFFFFF"));
-        addEvidence.setHorizontalAlignment(SwingConstants.CENTER);
-        addEvidence.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 10));
-        addEvidence.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        addEvidence.addMouseListener(Hover.newColor(addEvidence, "#1A75D5", "#165EAA"));
-        panel.add(addEvidence);
-
-        RoundedLabel updateLogs = new RoundedLabel("", 10, Color.decode("#FEEEEE"), 9);
-        updateLogs.setBounds(550, 706, 140, 35);
-        updateLogs.setBackground(Color.decode("#1A75D5"));
-        updateLogs.setText("Update Case");
-        updateLogs.setFont(new Font("Jost", Font.PLAIN, 14));
-        updateLogs.setForeground(Color.decode("#FFFFFF"));
-        updateLogs.setHorizontalAlignment(SwingConstants.CENTER);
-        updateLogs.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 10));
-        updateLogs.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        updateLogs.addMouseListener(Hover.newColor(updateLogs, "#1A75D5", "#165EAA"));
-        updateLogs.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Log log = new Log();
-                log.setMessage(newLog.getText());
-                log.setLogDate(Date.valueOf(LocalDate.now()));
-                log.setLogTime(Time.valueOf(LocalTime.now()));
-                log.setMedia("null");
-                log.setCaseID(cs.getCaseID());
-                JPanel panel = createPanel(new Log(newLog.getText(), Date.valueOf(DateTimeUtil.getDate()),
-                        Time.valueOf(DateTimeUtil.getFullTime()), Long.parseLong("1234")));
+        if (logs != null) {
+            Collections.reverse(logs);
+            for (Log log : logs) {
+                JPanel panel = createPanel(log);
                 containerPanel.add(panel);
                 containerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-                newLog.setText("");
-                caseController.registerLog(log);
             }
-        });
-        panel.add(updateLogs);
+        }
+        scrollPane.setViewportView(containerPanel);
 
-        JLabel backgroundLogin = new JLabel();
-        backgroundLogin.setOpaque(true);
-        backgroundLogin.setBounds(25, -25, 1393, 841);
-        backgroundLogin.setIcon(new ImageIcon("resources/artboards/assigned-case-background.png"));
-        panel.add(backgroundLogin);
-    }
+        if (cs.getFir().getStatus().equals(2)) {
+            RoundedLabel viewDocument = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+            viewDocument.setBounds(282, 645, 116, 26);
+            viewDocument.setBackground(Color.decode("#FFFFFF"));
+            viewDocument.setText("+ View Document");
+            viewDocument.setFont(new Font("Jost", Font.PLAIN, 11));
+            viewDocument.setForeground(Color.decode("#647DC4"));
+            viewDocument.setHorizontalAlignment(SwingConstants.CENTER);
+            viewDocument.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 6));
+            viewDocument.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            viewDocument.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    Verdict v = verdictController.getVerdict(cs);
+                    if (v != null) {
+                        ImageViewerWidget widget = new ImageViewerWidget((v.getVerdict()));
+                        widget.setVisible(true);
+                    }
+                }
+            });
+            panel.add(viewDocument);
+        } else {
+
+            if (app.context.getRole().equals("oic")) {
+                JLabel verdict = new JLabel();
+                verdict.setText("Court Verdict");
+                verdict.setFont(new Font("Jost", Font.PLAIN, 15));
+                verdict.setForeground(Color.decode("#000000"));
+                verdict.setBounds(282, 610, 182, 32);
+                panel.add(verdict);
+
+                RoundedLabel uploadDocument = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+                uploadDocument.setBounds(282, 645, 116, 26);
+                uploadDocument.setBackground(Color.decode("#FFFFFF"));
+                uploadDocument.setText("+ Upload Document");
+                uploadDocument.setFont(new Font("Jost", Font.PLAIN, 11));
+                uploadDocument.setForeground(Color.decode("#647DC4"));
+                uploadDocument.setHorizontalAlignment(SwingConstants.CENTER);
+                uploadDocument.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 6));
+                uploadDocument.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                uploadDocument.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        JFileChooser fileChooser = new JFileChooser();
+                        FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "png");
+                        fileChooser.setFileFilter(filter);
+                        int action = fileChooser.showSaveDialog(null);
+                        if (action == fileChooser.APPROVE_OPTION) {
+                            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                            file = mediaUtil.saveImage(filePath);
+                            if (file != null) {
+                                JOptionPane.showMessageDialog(app, "Successfully saved file");
+                            } else {
+                                JOptionPane.showMessageDialog(app, "Error saving file");
+                            }
+                        }
+                    }
+                });
+                panel.add(uploadDocument);
+
+                RoundedLabel submitCase = new RoundedLabel("", 10, Color.decode("#FEEEEE"), 9);
+                submitCase.setBounds(550, 706, 140, 35);
+                submitCase.setBackground(Color.decode("#1A75D5"));
+                submitCase.setText("Update Case");
+                submitCase.setFont(new Font("Jost", Font.PLAIN, 14));
+                submitCase.setForeground(Color.decode("#FFFFFF"));
+                submitCase.setHorizontalAlignment(SwingConstants.CENTER);
+                submitCase.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 10));
+                submitCase.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                submitCase.addMouseListener(Hover.newColor(submitCase, "#1A75D5", "#165EAA"));
+                submitCase.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        Verdict verdict = new Verdict();
+                        verdict.setVerdict(file);
+                        verdict.setVerdictDate(Date.valueOf(LocalDate.now()));
+                        verdict.setCaseID(cs.getCaseID());
+                        verdictController.saveVerdict(verdict);
+                    }
+                });
+                panel.add(submitCase);
+            } else {
+                JTextArea newLog = new JTextArea();
+                newLog.setBackground(Color.decode("#FAFAFA"));
+                newLog.setFont(new Font("Jost", Font.PLAIN, 14));
+                newLog.setForeground(Color.decode("#165BBF"));
+                newLog.setBounds(306, 626, 558, 38);
+                newLog.setBorder(null);
+                newLog.setEditable(true);
+                newLog.addFocusListener(Focus.setPlaceholderArea(newLog, "Enter new case log"));
+                newLog.setLineWrap(true);
+                newLog.setWrapStyleWord(true);
+                panel.add(newLog);
+
+                RoundedLabel newLogsBackground = new RoundedLabel("", 10, Color.decode("#F2F4F7"), 12);
+                newLogsBackground.setBounds(286, 620, 600, 54);
+                newLogsBackground.setBackground(Color.decode("#FAFAFA"));
+                newLogsBackground.setBorder(new RoundedBorderLabel(Color.decode("#F2F4F7"), 1, 12));
+                panel.add(newLogsBackground);
+
+                RoundedLabel addEvidence = new RoundedLabel("", 10, Color.decode("#FEEEEE"), 9);
+                addEvidence.setBounds(896, 634, 98, 28);
+                addEvidence.setBackground(Color.decode("#1A75D5"));
+                addEvidence.setText("+ Evidence");
+                addEvidence.setFont(new Font("Jost", Font.PLAIN, 14));
+                addEvidence.setForeground(Color.decode("#FFFFFF"));
+                addEvidence.setHorizontalAlignment(SwingConstants.CENTER);
+                addEvidence.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 10));
+                addEvidence.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                addEvidence.addMouseListener(Hover.newColor(addEvidence, "#1A75D5", "#165EAA"));
+                addEvidence.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        JFileChooser fileChooser = new JFileChooser();
+                        FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "png");
+                        fileChooser.setFileFilter(filter);
+                        int action = fileChooser.showSaveDialog(null);
+                        if (action == fileChooser.APPROVE_OPTION) {
+                            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                            file = mediaUtil.saveImage(filePath);
+                            if (file != null) {
+                                JOptionPane.showMessageDialog(app, "Successfully saved file");
+                            } else {
+                                JOptionPane.showMessageDialog(app, "Error saving file");
+                            }
+                        }
+                    }
+                });
+                panel.add(addEvidence);
+
+                RoundedLabel updateLogs = new RoundedLabel("", 10, Color.decode("#FEEEEE"), 9);
+                updateLogs.setBounds(550, 706, 140, 35);
+                updateLogs.setBackground(Color.decode("#1A75D5"));
+                updateLogs.setText("Update Case");
+                updateLogs.setFont(new Font("Jost", Font.PLAIN, 14));
+                updateLogs.setForeground(Color.decode("#FFFFFF"));
+                updateLogs.setHorizontalAlignment(SwingConstants.CENTER);
+                updateLogs.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 10));
+                updateLogs.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                updateLogs.addMouseListener(Hover.newColor(updateLogs, "#1A75D5", "#165EAA"));
+                updateLogs.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        String logText = newLog.getText().trim();
+                        if (!logText.isEmpty() && !Focus.hasPlaceholder(newLog, "Enter new case log")) {
+                            Log log = new Log();
+                            log.setMessage(newLog.getText());
+                            log.setLogDate(Date.valueOf(LocalDate.now()));
+                            log.setLogTime(Time.valueOf(LocalTime.now()));
+                            log.setMedia(file);
+                            log.setCaseID(cs.getCaseID());
+                            JPanel panel = createPanel(new Log(newLog.getText(), Date.valueOf(DateTimeUtil.getDate()),
+                                    Time.valueOf(DateTimeUtil.getFullTime()), Long.parseLong("1234")));
+                            containerPanel.add(panel, 0);
+                            containerPanel.add(Box.createRigidArea(new Dimension(0, 0)));
+                            newLog.setText("");
+                            scrollPane.revalidate();
+                            scrollPane.repaint();
+                            caseController.registerLog(log);
+                        } else {
+                            JOptionPane.showMessageDialog(panel, "Cannot upload empty case log");
+                        }
+                    }
+                });
+                panel.add(updateLogs);
+            }
+        }
+            JLabel backgroundLogin = new JLabel();
+            backgroundLogin.setOpaque(true);
+            backgroundLogin.setBounds(25, -25, 1393, 841);
+            backgroundLogin.setIcon(new ImageIcon("resources/artboards/assigned-case-background.png"));
+            panel.add(backgroundLogin);
+        }
+    
 
     public JPanel getFrame() {
         return panel;

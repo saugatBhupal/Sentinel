@@ -1,10 +1,16 @@
+// 
 package views;
 
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -17,12 +23,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import org.apache.batik.gvt.text.GVTAttributedCharacterIterator.TextAttribute;
+
 import controller.CitizenController;
-import controller.PoliceController;
 import controller.controllerImpl.CitizenControllerImpl;
-import controller.controllerImpl.PoliceControllerImpl;
 import model.Citizen;
-import model.Police;
 import plugins.MediaFormat;
 import plugins.ImagePlugins.ImagePlugins;
 import plugins.PluginFactory.PluginFactory;
@@ -32,24 +37,27 @@ import utils.ui.graphic.RoundedLabel;
 import utils.ui.graphic.RoundedBorderLabel;
 import views.widget.DateTimeWidget;
 
-public class PoliceList extends JFrame {
+public class CriminalList extends JFrame {
     private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
-    private final PoliceController policeController;
+    private static CitizenController citizenController;
+    private List<Citizen> citizens;
     private JFrame frame;
     private JPanel panel;
 
-    public PoliceList() {
-        this.policeController = new PoliceControllerImpl(panel);
+    public CriminalList(App app, List<Citizen> citizens) {
+        this.citizenController = new CitizenControllerImpl(app);
+        this.citizens = citizens;
         initialize();
     }
-    private static JPanel createPanel(Police police) {
+
+    private static JPanel createPanel(Citizen citizen) {
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(860, 117));
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         panel.setBackground(null);
         panel.setLayout(null);
 
-        RoundedLabel details = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
+        RoundedLabel details = new RoundedLabel("", 12, Color.decode("#FEEEEE"), 9);
         details.setBounds(618, 85, 80, 20);
         details.setBackground(Color.decode("#EEF7FE"));
         details.setText("Details");
@@ -59,10 +67,16 @@ public class PoliceList extends JFrame {
         details.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 12));
         details.addMouseListener(Hover.animateOutline(details, "#EEF7FE", "#647DC4", "#26449E", "#EEF7FE"));
         details.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        details.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                citizenController.getDetail(citizen);
+            }
+        });
         panel.add(details);
-        
+
         JLabel citizenNoTitle = new JLabel();
-        citizenNoTitle.setText("Police ID.");
+        citizenNoTitle.setText("Citizenship No.");
         citizenNoTitle.setFont(new Font("Jost", Font.PLAIN, 15));
         citizenNoTitle.setForeground(Color.decode("#415EB6"));
         citizenNoTitle.setBounds(36, 20, 141, 32);
@@ -82,23 +96,22 @@ public class PoliceList extends JFrame {
         lastNameTitle.setBounds(36, 76, 141, 32);
         panel.add(lastNameTitle);
 
-        JLabel policeID = new JLabel();
-        policeID.setText(police.getPoliceID().toString());
-        policeID.setHorizontalAlignment(SwingConstants.LEFT);
-        policeID.setFont(new Font("Jost", Font.PLAIN, 15));
-        policeID.setForeground(Color.decode("#93AEF8"));
-        policeID.setBounds(142, 20, 141, 32);
-        panel.add(policeID);
+        JLabel citizenshipNo = new JLabel();
+        citizenshipNo.setText(citizen.getCitizenshipNo().toString());
+        citizenshipNo.setFont(new Font("Jost", Font.PLAIN, 15));
+        citizenshipNo.setForeground(Color.decode("#93AEF8"));
+        citizenshipNo.setBounds(142, 20, 141, 32);
+        panel.add(citizenshipNo);
 
         JLabel firstName = new JLabel();
-        firstName.setText(police.getCitizen().getFirstName());
+        firstName.setText(citizen.getFirstName());
         firstName.setFont(new Font("Jost", Font.PLAIN, 15));
         firstName.setForeground(Color.decode("#93AEF8"));
         firstName.setBounds(122, 48, 141, 32);
         panel.add(firstName);
 
         JLabel lastName = new JLabel();
-        lastName.setText(police.getCitizen().getLastName());
+        lastName.setText(citizen.getLastName());
         lastName.setFont(new Font("Jost", Font.PLAIN, 15));
         lastName.setForeground(Color.decode("#93AEF8"));
         lastName.setBounds(122, 76, 141, 32);
@@ -126,7 +139,7 @@ public class PoliceList extends JFrame {
         panel.add(contactNoTitle);
 
         JLabel dob = new JLabel();
-        dob.setText(police.getCitizen().getDOB().toString());
+        dob.setText(citizen.getDOB().toString());
         dob.setFont(new Font("Jost", Font.PLAIN, 15));
         dob.setForeground(Color.decode("#93AEF8"));
         dob.setBounds(343, 20, 141, 32);
@@ -140,7 +153,7 @@ public class PoliceList extends JFrame {
         panel.add(gender);
 
         JLabel contactNo = new JLabel();
-        contactNo.setText(police.getCitizen().getContact());
+        contactNo.setText(citizen.getContact());
         contactNo.setFont(new Font("Jost", Font.PLAIN, 15));
         contactNo.setForeground(Color.decode("#93AEF8"));
         contactNo.setBounds(343, 76, 141, 32);
@@ -168,14 +181,14 @@ public class PoliceList extends JFrame {
         panel.add(recordsTitle);
 
         JLabel tempAddress = new JLabel();
-        tempAddress.setText(police.getCitizen().getTemporaryAddress());
+        tempAddress.setText(citizen.getTemporaryAddress());
         tempAddress.setFont(new Font("Jost", Font.PLAIN, 15));
         tempAddress.setForeground(Color.decode("#93AEF8"));
         tempAddress.setBounds(615, 20, 281, 32);
         panel.add(tempAddress);
 
         JLabel address = new JLabel();
-        address.setText(police.getCitizen().getPermanentAddress());
+        address.setText(citizen.getPermanentAddress());
         address.setFont(new Font("Jost", Font.PLAIN, 15));
         address.setForeground(Color.decode("#93AEF8"));
         address.setBounds(615, 48, 281, 32);
@@ -210,7 +223,7 @@ public class PoliceList extends JFrame {
         panel.setLayout(null);
         frame.getContentPane().add(panel);
 
-  JLabel logo = new JLabel();
+        JLabel logo = new JLabel();
         logo.setBounds(25, 35, 58, 57);
         logo.setIcon(imagePlugins.resize(new ImageIcon("resources/artboards/Sentinel-logo-2.png").getImage(), logo));
         panel.add(logo);
@@ -228,7 +241,7 @@ public class PoliceList extends JFrame {
         panel.add(separator);
 
         JLabel currentPageTitle = new JLabel();
-        currentPageTitle.setText("List of police officers");
+        currentPageTitle.setText("List of citizens");
         currentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
         currentPageTitle.setForeground(Color.decode("#1A75D5"));
         currentPageTitle.setBounds(400, 61, 151, 32);
@@ -276,6 +289,14 @@ public class PoliceList extends JFrame {
         search.setFont(new Font("Jost", Font.PLAIN, 14));
         search.setForeground(new Color(61, 63, 64, 180));
         search.setBounds(414, 164, 365, 30);
+        search.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    citizenController.fullTextSearch(search.getText());
+                }
+            }
+        });
         panel.add(search);
 
         RoundedLabel searchButton = new RoundedLabel("", 12, Color.decode("#1A75D5"), 9);
@@ -286,12 +307,20 @@ public class PoliceList extends JFrame {
         searchButton.setForeground(Color.decode("#FFFFFF"));
         searchButton.setHorizontalAlignment(SwingConstants.CENTER);
         searchButton.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 12));
+        searchButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        searchButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("True");
+                citizenController.fullTextSearch(search.getText());
+            }
+        });
         panel.add(searchButton);
 
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(232, 242, 888, 599);
         scrollPane.setBorder(null);
-        scrollPane.getViewport().setBackground(Color.decode("#000000"));
+        scrollPane.getViewport().setBackground(Color.decode("#FFFF"));
         panel.add(scrollPane);
 
         JPanel containerPanel = new JPanel();
@@ -299,13 +328,14 @@ public class PoliceList extends JFrame {
         containerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         containerPanel.setBackground(Color.decode("#FFFFFF"));
 
-        List<Police> polices = policeController.getAllPolice();
-        for (Police police : polices) {
-            JPanel panel = createPanel(police);
+        if (citizens == null) {
+            citizenController.getAllCriminals();
+        }
+        for (Citizen citizen : citizens) {
+            JPanel panel = createPanel(citizen);
             containerPanel.add(panel);
             containerPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         }
-
         scrollPane.setViewportView(containerPanel);
 
         JLabel background = new JLabel();
@@ -319,7 +349,4 @@ public class PoliceList extends JFrame {
     public JPanel getFrame() {
         return panel;
     }
-}      
-    
-
-        
+}

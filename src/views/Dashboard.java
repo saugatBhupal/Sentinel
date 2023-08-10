@@ -349,3 +349,4 @@ public class Dashboard extends JFrame{
 		return panel;
 	}
 }
+

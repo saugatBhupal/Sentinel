@@ -48,6 +48,7 @@ import utils.ui.graphic.RoundedBorderLabel;
 import views.widget.DateTimeWidget;
 
 import model.Case;
+
 public class AssignedCasesPanel extends JFrame {
     private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
     private static FirController firController;
@@ -96,6 +97,7 @@ public class AssignedCasesPanel extends JFrame {
         idTitle.setForeground(titleColor);
         idTitle.setBounds(59, 23, 120, 20);
         panel.add(idTitle);
+
         JLabel recordNameTitle = new JLabel();
         recordNameTitle.setText("Record Name");
         recordNameTitle.setFont(new Font("Jost", Font.PLAIN, 15));

@@ -6,5 +6,8 @@ import model.Citizen;
 
 public interface CitizenController {
     Citizen search(Long citizenID);
-    List<Citizen> getAllCitizens();
+    void getAllCitizens();
+    void getDetail(Citizen citizen);
+    void fullTextSearch(String keyword);
+    void getAllCriminals();
 }

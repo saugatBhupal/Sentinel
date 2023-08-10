@@ -3,19 +3,27 @@ package views;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Month;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.FirController;
 import controller.controllerImpl.FirControllerImpl;
@@ -24,6 +32,8 @@ import model.Police;
 import plugins.MediaFormat;
 import plugins.ImagePlugins.ImagePlugins;
 import plugins.PluginFactory.PluginFactory;
+import utils.dateTime.DateTimeUtil;
+import utils.media.mediaUtil;
 import utils.ui.event.Focus;
 import utils.ui.event.Hover;
 import views.widget.DateTimeWidget;
@@ -31,14 +41,18 @@ import views.widget.DateTimeWidget;
 public class CreateFirPanel extends JFrame {
     private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
     private final FirController firController;
+    private final App app;
     private JFrame frame;
     private JPanel panel;
+    private String file;
 
-    public CreateFirPanel() {
+    public CreateFirPanel(App app) {
         initialize();
-        this.firController = new FirControllerImpl();
+        this.app = app;
+        this.firController = new FirControllerImpl(app);
     }
- public void initialize() {
+
+    public void initialize() {
 
         frame = new JFrame();
         frame.setBounds(0, 0, 1201, 841);
@@ -89,7 +103,6 @@ public class CreateFirPanel extends JFrame {
         complaintByField.setBackground(Color.decode("#ECECEC"));
         complaintByField.setBorder(null);
         complaintByField.setForeground(Color.decode("#6D6767"));
-        // complaintByField.setText("Citizen I.D / Name");
         complaintByField.addFocusListener(Focus.setPlaceholder(complaintByField, "Citizen I.D / Name"));
         complaintByField.setBounds(292, 186, 300, 27);
         panel.add(complaintByField);
@@ -133,6 +146,7 @@ public class CreateFirPanel extends JFrame {
         incidentField.setBorder(null);
         incidentField.setForeground(Color.decode("#6D6767"));
         incidentField.setBounds(295, 324, 700, 130);
+        incidentField.setLineWrap(true);
         panel.add(incidentField);
 
         JLabel dateTimeLabel = new JLabel();
@@ -209,7 +223,26 @@ public class CreateFirPanel extends JFrame {
         addEvidence.setForeground(new Color(255, 255, 255, 240));
         addEvidence.setCursor(new Cursor(Cursor.HAND_CURSOR));
         addEvidence.setBounds(285, 595, 184, 40);
-        addEvidence.addMouseListener(Hover.newColor(addEvidence, "#1A75D5", "165EAA"));
+        addEvidence.addMouseListener(Hover.newColor(addEvidence, "#1A75D5", "#165EAA"));
+        addEvidence.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e){
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "png");
+                fileChooser.setFileFilter(filter);
+                int action = fileChooser.showSaveDialog(null);
+                if(action == fileChooser.APPROVE_OPTION){
+                    String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                    file = mediaUtil.saveImage(filePath);
+                    if(file != null){
+                        JOptionPane.showMessageDialog(app,"Successfully saved file");
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(app, "Error saving file");
+                    }
+                }
+            }
+        });
         panel.add(addEvidence);
 
         JLabel witnessLabel = new JLabel();
@@ -258,21 +291,32 @@ public class CreateFirPanel extends JFrame {
         fileFir.setForeground(new Color(255, 255, 255, 240));
         fileFir.setCursor(new Cursor(Cursor.HAND_CURSOR));
         fileFir.setBounds(585, 670, 184, 40);
-        fileFir.addMouseListener(Hover.newColor(fileFir, "#1A75D5", "165EAA"));
+        fileFir.addMouseListener(Hover.newColor(fileFir, "#1A75D5", "#165EAA"));
         fileFir.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e ){
+            public void mouseClicked(MouseEvent e) {
                 Fir fir = new Fir();
                 fir.setFiledBy(Long.valueOf(complaintByField.getText()));
                 fir.setFiledAgainst(Long.parseLong(againstField.getText()));
-                fir.setFiledDate(Date.valueOf(yearField.getText() + "-" + monthField.getText() + "-" + dateField.getText()));
-                fir.setFiledTime(Time.valueOf(hourField.getText() + ":" + minuteField.getText() + ":" + secondsField.getText()));
+                fir.setFiledDate(
+                        Date.valueOf(yearField.getText() + "-" + monthField.getText() + "-" + dateField.getText()));
+                fir.setFiledTime(
+                        Time.valueOf(hourField.getText() + ":" + minuteField.getText() + ":" + secondsField.getText()));
                 fir.setDescription(incidentField.getText());
                 fir.setCategory(category.getSelectedItem().toString());
-                fir.setEvidence(null);
-                fir.setRegisteredBy(Long.parseLong("200014"));
-                fir.setWitness(Long.parseLong(witnessField.getText()));
-                firController.save(fir);
+                fir.setEvidence(file);
+                fir.setRegisteredBy(app.context.getPolice().getPoliceID());
+                String witnessText = witnessField.getText();
+                Long witnessValue = (witnessText.isEmpty() || !witnessText.matches("\\d+")) ? 0 : Long.parseLong(witnessText);
+                fir.setWitness(witnessValue);
+                fir.setRegisteredDate(Date.valueOf(LocalDate.now()));
+                fir.setRegisteredTime(Time.valueOf(LocalTime.now()));
+                if(DateTimeUtil.elapsedPresent(LocalDate.of(Integer.parseInt(yearField.getText()),  Month.of(Integer.parseInt(monthField.getText())), Integer.parseInt(dateField.getText())))< 0){
+                    JOptionPane.showMessageDialog(panel, "Invalid time please recheck");
+                }
+                else{
+                    firController.save(fir);
+                }
             }
         });
         panel.add(fileFir);
@@ -320,6 +364,5 @@ public class CreateFirPanel extends JFrame {
     public JPanel getFrame() {
         return panel;
     }
+    
 }
-
-   

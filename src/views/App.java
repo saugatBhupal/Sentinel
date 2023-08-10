@@ -1,12 +1,16 @@
 package views;
 
+import java.awt.Container;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import model.Context;
+
 public class App extends JFrame {
 
+	public Context context = new Context();
 
 	/**
 	 * Launch the application.
@@ -40,13 +44,17 @@ public class App extends JFrame {
 		setBounds(100, 100, 1201, 841);
 		getContentPane().setLayout(null);
 
-		LoginPanel loginPanel = new LoginPanel();
+		LoginPanel loginPanel = new LoginPanel(this);
 		JPanel panel = loginPanel.getFrame();
-		//RegisterPanel registerPanel = new RegisterPanel();
-		//JPanel panel = registerPanel.getFrame();
-		//CitizenList citizenList = new CitizenList();
-		//JPanel panel = citizenList.getFrame();
 		getContentPane().add(panel);//4447
+	}
+
+	public void addPanel(JPanel panel){
+		Container container = getContentPane();
+		container.removeAll();
+		container.revalidate();
+		container.repaint();
+		container.add(panel);
 	}
 
 }

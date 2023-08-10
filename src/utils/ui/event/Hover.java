@@ -3,9 +3,11 @@ package utils.ui.event;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
@@ -16,15 +18,45 @@ public class Hover {
 
             @Override
 			public void mouseEntered(MouseEvent e){
-				component.setBackground(Color.decode("#013B7A"));
+				component.setBackground(Color.decode(newColor));
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e){
-				component.setBackground(Color.decode("#165EAA"));
+				component.setBackground(Color.decode(oldColor));
 			}
         };
     }
+    public static MouseAdapter newColor(JFileChooser component, String oldColor, String newColor){
+        return new MouseAdapter() {
+
+            @Override
+			public void mouseEntered(MouseEvent e){
+				component.setBackground(Color.decode(newColor));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e){
+				component.setBackground(Color.decode(oldColor));
+			}
+        };
+    }
+	public static MouseAdapter animateOutline(JLabel component, String oldBg, String oldFg, String newBg, String newFg){
+			return new MouseAdapter() {
+
+            @Override
+			public void mouseEntered(MouseEvent e){
+				component.setBackground(Color.decode(newBg));
+				component.setForeground(Color.decode(newFg));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e){
+				component.setBackground(Color.decode(oldBg));
+				component.setForeground(Color.decode(oldFg));
+			}
+        };
+	}
 
 	public static MouseAdapter focusable(JTextField component){
         return new MouseAdapter() {

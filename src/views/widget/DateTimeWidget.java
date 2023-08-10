@@ -44,7 +44,7 @@ public class DateTimeWidget{
 		JLabel time = new JLabel(DateTimeUtil.getTime());
 		time.setFont(new Font("Jost", Font.PLAIN, 14));
 		time.setForeground(Color.decode("#59687E"));
-		time.setBounds(996, 50, 75, 20);
+		time.setBounds(996, 50, 80, 20);
 		component.add(time);
 
 		JLabel calendarIcon = new JLabel();
@@ -64,6 +64,3 @@ public class DateTimeWidget{
 
     }
 }
-     
-
-

@@ -16,15 +16,19 @@ import dao.daoImpl.PoliceDaoImpl;
 import model.Case;
 import model.Citizen;
 import model.Fir;
+import model.Log;
+import model.OIC;
 import model.Police;
+import model.Verdict;
 
 public class Orm {
 
-        private static final PoliceDao policeDao = new PoliceDaoImpl();
-        private static final CitizenDao citizenDao = new CitizenDaoImpl();
-        private static final FirDao firDao = new FirDaoImpl();
+    private static final PoliceDao policeDao = new PoliceDaoImpl();
+    private static final CitizenDao citizenDao = new CitizenDaoImpl();
+    private static final CaseDao caseDao = new CaseDaoImpl();
+    private static final FirDao firDao = new FirDaoImpl();
 
-        public static List<Citizen> mapToCitizen(ResultSet resultSet) throws SQLException {
+    public static List<Citizen> mapToCitizen(ResultSet resultSet) throws SQLException {
         List<Citizen> citizens = new ArrayList<>();
         while (resultSet.next()) {
             Citizen citizen = new Citizen();
@@ -56,10 +60,9 @@ public class Orm {
         return (polices.size() > 0 ? polices : null);
     }
 
-
-    public static List<Fir> mapToFir(ResultSet resultSet) throws SQLException{
+    public static List<Fir> mapToFir(ResultSet resultSet) throws SQLException {
         List<Fir> firs = new ArrayList<>();
-        while(resultSet.next()){
+        while (resultSet.next()) {
             Fir fir = new Fir();
             fir.setFirID(resultSet.getLong("firID"));
             fir.setFiledBy(resultSet.getLong("filedBy"));
@@ -71,14 +74,20 @@ public class Orm {
             fir.setEvidence(resultSet.getString("evidence"));
             fir.setRegisteredBy(resultSet.getLong("registeredBy"));
             fir.setPolice(policeDao.findById(resultSet.getLong("registeredBy")));
+            fir.setRegisteredDate(resultSet.getDate("registeredDate"));
+            fir.setRegisteredTime(resultSet.getTime("registeredTime"));
+            fir.setWitness(resultSet.getLong("witness"));
+            fir.setStatus(resultSet.getInt("status"));
+            fir.setOffenderCitizen(citizenDao.findByCitizenID(fir.getFiledAgainst()));
+            fir.setVictimCitizen(citizenDao.findByCitizenID(fir.getFiledBy()));
             firs.add(fir);
         }
-        return(firs.size() > 0 ? firs : null);
+        return (firs.size() > 0 ? firs : null);
     }
 
-    public static List<Case> mapToCase(ResultSet resultSet) throws SQLException{
+    public static List<Case> mapToCase(ResultSet resultSet) throws SQLException {
         List<Case> cases = new ArrayList<>();
-        while(resultSet.next()){
+        while (resultSet.next()) {
             Case cs = new Case();
             cs.setCaseID(resultSet.getLong("caseID"));
             cs.setRegisteredDate(resultSet.getDate("registeredDate"));
@@ -90,5 +99,48 @@ public class Orm {
             cases.add(cs);
         }
         return (cases.size() > 0 ? cases : null);
+    }
+
+    public static List<OIC> mapToOIC(ResultSet resultSet) throws SQLException {
+        List<OIC> oics = new ArrayList<>();
+        while (resultSet.next()) {
+            OIC oic = new OIC();
+            oic.setOicID(resultSet.getLong("oicID"));
+            oic.setPoliceID(resultSet.getLong("policeID"));
+            oic.setPolice(policeDao.findById(resultSet.getLong("policeID")));
+            oics.add(oic);
+        }
+        return (oics.size() > 0 ? oics : null);
+
+    }
+
+    public static List<Log> mapToLog(ResultSet resultSet) throws SQLException {
+        List<Log> logs = new ArrayList<>();
+        while (resultSet.next()) {
+            Log log = new Log();
+            log.setLogsID(resultSet.getLong("logID"));
+            log.setMessage(resultSet.getString("message"));
+            log.setLogDate(resultSet.getDate("logDate"));
+            log.setLogTime(resultSet.getTime("logTime"));
+            log.setMedia(resultSet.getString("media"));
+            log.setCaseID(resultSet.getLong("caseID"));
+            logs.add(log);
+        }
+        return (logs.size() > 0 ? logs : null);
+    }
+
+    public static List<Verdict> mapToVerdict(ResultSet resultSet) throws SQLException{
+        List<Verdict> verdicts = new ArrayList<>();
+        while(resultSet.next()){
+            Verdict verdict = new Verdict();
+            verdict.setVerdictID(resultSet.getLong("verdictID"));
+            verdict.setVerdict(resultSet.getString("verdict"));
+            verdict.setVerdictDate(resultSet.getDate("verdictDate"));
+            verdict.setCaseID(resultSet.getLong("caseID"));
+            verdict.setCs(caseDao.findByID(resultSet.getLong("caseID")));
+            verdict.setFir(verdict.getCs().getFir());
+            verdicts.add(verdict);
+        }
+        return(verdicts.size() >0 ? verdicts : null);
     }
 }

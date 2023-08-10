@@ -1,36 +1,73 @@
 package views;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 
 import org.apache.batik.gvt.text.GVTAttributedCharacterIterator.TextAttribute;
 
+import controller.CaseController;
+import controller.CitizenController;
+import controller.FirController;
+import controller.PoliceController;
+import controller.controllerImpl.CaseControllerImpl;
+import controller.controllerImpl.CitizenControllerImpl;
+import controller.controllerImpl.FirControllerImpl;
+import controller.controllerImpl.PoliceControllerImpl;
+import model.Case;
+import model.Citizen;
+import model.Fir;
+import model.Police;
 import plugins.MediaFormat;
 import plugins.ImagePlugins.ImagePlugins;
 import plugins.PluginFactory.PluginFactory;
+import utils.dateTime.DateTimeUtil;
+import utils.generator.PasswordGenerator;
 import utils.ui.event.Focus;
 import utils.ui.event.Hover;
 import utils.ui.graphic.RoundedLabel;
 import utils.ui.graphic.RoundedBorderLabel;
 import views.widget.DateTimeWidget;
+import views.widget.ImageViewerWidget;
 
-public class AllCasesPanel extends JFrame {
+public class ViewFirPanel extends JFrame {
     private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
+    private final CitizenController citizenController;
+    private final PoliceController policeController;
+    private final FirController firController;
+    private final CaseController caseController;
     private JFrame frame;
     private JPanel panel;
     private Font font;
+    private Fir fir;
+    private final App app;
     private Map<TextAttribute, Object> attributes;
 
-    public AllCasesPanel() {
+    public ViewFirPanel(App app, Fir fir) {
+        this.app = app;
+        this.fir = fir;
+        this.citizenController = new CitizenControllerImpl(app);
+        this.policeController = new PoliceControllerImpl(panel, app);
+        this.firController = new FirControllerImpl(app);
+        this.caseController = new CaseControllerImpl(app);
         initialize();
     }
 
@@ -54,7 +91,7 @@ public class AllCasesPanel extends JFrame {
         panel.add(logo);
 
         JLabel parentPageTitle = new JLabel();
-        parentPageTitle.setText("Cases");
+        parentPageTitle.setText("F.I.R");
         parentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
         parentPageTitle.setForeground(Color.decode("#002349"));
         parentPageTitle.setBounds(239, 61, 141, 32);
@@ -62,14 +99,14 @@ public class AllCasesPanel extends JFrame {
 
         JLabel separator = new JLabel();
         separator.setIcon(new ImageIcon("resources/artboards/left-arrow-1.png"));
-        separator.setBounds(295, 70, 16, 16);
+        separator.setBounds(285, 70, 16, 16);
         panel.add(separator);
 
         JLabel currentPageTitle = new JLabel();
-        currentPageTitle.setText("All Cases");
+        currentPageTitle.setText("View F.I.R");
         currentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
         currentPageTitle.setForeground(Color.decode("#1A75D5"));
-        currentPageTitle.setBounds(320, 61, 151, 32);
+        currentPageTitle.setBounds(310, 61, 151, 32);
         panel.add(currentPageTitle);
 
         DateTimeWidget.addWidget(panel);
@@ -134,44 +171,6 @@ public class AllCasesPanel extends JFrame {
         complaintByContact.setForeground(Color.decode("#737373"));
         complaintByContact.setBounds(285, 214, 252, 32);
         panel.add(complaintByContact);
-
-        RoundedLabel complaintBydetails = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
-        complaintBydetails.setBounds(443, 149, 56, 18);
-        complaintBydetails.setBackground(Color.decode("#FFFFFF"));
-        complaintBydetails.setText("Details");
-        complaintBydetails.setFont(new Font("Jost", Font.PLAIN, 10));
-        complaintBydetails.setForeground(Color.decode("#647DC4"));
-        complaintBydetails.setHorizontalAlignment(SwingConstants.CENTER);
-        complaintBydetails.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 6));
-        complaintBydetails.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        complaintBydetails.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                citizenController.getDetail(citizenController.search(fir.getFiledBy()));
-            }
-        });
-        panel.add(complaintBydetails);
-
-        JLabel complaintAgainst = new JLabel();
-        complaintAgainst.setText(citizenController.search(fir.getFiledAgainst()).getFullName());
-        complaintAgainst.setFont(new Font("Jost", Font.PLAIN, 15));
-        complaintAgainst.setForeground(Color.decode("#000000"));
-        complaintAgainst.setBounds(285, 290, 202, 32);
-        panel.add(complaintAgainst);
-
-        JLabel complaintAgainstAddress = new JLabel();
-        complaintAgainstAddress.setText(citizenController.search(fir.getFiledAgainst()).getTemporaryAddress());
-        complaintAgainstAddress.setFont(new Font("Jost", Font.PLAIN, 14));
-        complaintAgainstAddress.setForeground(Color.decode("#737373"));
-        complaintAgainstAddress.setBounds(285, 311, 282, 32);
-        panel.add(complaintAgainstAddress);
-
-        JLabel complaintAgainstContact = new JLabel();
-        complaintAgainstContact.setText(citizenController.search(fir.getFiledAgainst()).getContact());
-        complaintAgainstContact.setFont(new Font("Jost", Font.PLAIN, 14));
-        complaintAgainstContact.setForeground(Color.decode("#737373"));
-        complaintAgainstContact.setBounds(285, 336, 252, 32);
-        panel.add(complaintAgainstContact);
 
         RoundedLabel complaintBydetails = new RoundedLabel("", 20, Color.decode("#FEEEEE"), 9);
         complaintBydetails.setBounds(443, 149, 56, 18);
@@ -394,10 +393,19 @@ public class AllCasesPanel extends JFrame {
         evidence.setHorizontalAlignment(SwingConstants.CENTER);
         evidence.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 10));
         evidence.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        evidence.addMouseListener(Hover.newColor(evidence, "#1A75D5", "165EAA"));
+        evidence.addMouseListener(Hover.newColor(evidence, "#1A75D5", "#165EAA"));
+        evidence.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (fir.getEvidence() != null) {
+                    ImageViewerWidget widget = new ImageViewerWidget(fir.getEvidence());
+                    widget.setVisible(true);
+                }
+            }
+        });
         panel.add(evidence);
 
-        if (app.context.getRole().equals("oic")) {
+        if (app.context.getRole().equals("oic") && fir.getStatus().equals(0)) {
             JLabel assignTitle = new JLabel();
             assignTitle.setText("Assign F.I.R");
             assignTitle.setFont(new Font("Jost", Font.PLAIN, 15));
@@ -432,7 +440,7 @@ public class AllCasesPanel extends JFrame {
             register.addMouseListener(Hover.newColor(register, "#1A75D5", "#165EAA"));
             register.addMouseListener(new MouseAdapter() {
                 @Override
-                public void mouseClicked(MouseEvent e){
+                public void mouseClicked(MouseEvent e) {
                     Case cs = new Case();
                     cs.setRegisteredDate(Date.valueOf(LocalDate.now()));
                     cs.setRegisteredTime(Time.valueOf(LocalTime.now()));
@@ -454,8 +462,8 @@ public class AllCasesPanel extends JFrame {
             update.setCursor(new Cursor(Cursor.HAND_CURSOR));
             update.addMouseListener(Hover.newColor(update, "#1A75D5", "#165EAA"));
             update.addMouseListener(new MouseAdapter() {
-                @Override 
-                public void mouseClicked(MouseEvent e){
+                @Override
+                public void mouseClicked(MouseEvent e) {
                     firController.getUpdate(fir);
                 }
             });

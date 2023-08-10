@@ -60,6 +60,19 @@ public class JdbcConnection {
         return resultSet;
 
     }
+
+    public int update(PreparedStatement ps){
+       try {
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows > 0) {
+                    return affectedRows;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0; 
+    }
+    
     public void close() throws SQLException{
         connection.close();
     }

@@ -33,7 +33,6 @@ public class AllCasesPanel extends JFrame {
         initialize();
     }
 
-<<<<<<< HEAD
     public void initialize() {
 
         frame = new JFrame();
@@ -54,27 +53,6 @@ public class AllCasesPanel extends JFrame {
         panel.add(logo);
 
         JLabel parentPageTitle = new JLabel();
-=======
-
-    frame = new JFrame();
-    frame.setBounds(0, 0, 1201, 841);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setLocationRelativeTo(null);
-    frame.getContentPane().setLayout(null);
-
-    panel = new JPanel();
-    panel.setBackground(new Color(248, 248, 250, 1));
-    panel.setBounds(0, 0, 1201, 841);
-    panel.setLayout(null);
-    frame.getContentPane().add(panel);
-
-    JLabel logo = new JLabel();
-    logo.setBounds(25, 35, 58, 57);
-    logo.setIcon(imagePlugins.resize(new ImageIcon("resources/artboards/Sentinel-logo-2.png").getImage(), logo));
-    panel.add(logo);
-
-    JLabel parentPageTitle = new JLabel();
->>>>>>> 9887db2bc7cd3d59d874d4100a8d07255ce9d4b8
         parentPageTitle.setText("Cases");
         parentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
         parentPageTitle.setForeground(Color.decode("#002349"));
@@ -258,19 +236,9 @@ public class AllCasesPanel extends JFrame {
         backgroundLogin.setBounds(110, 0, 1093, 841);
         backgroundLogin.setIcon(new ImageIcon("resources/artboards/list-citizen-background.png"));
         panel.add(backgroundLogin);
-<<<<<<< HEAD
     }
-=======
-    
->>>>>>> 9887db2bc7cd3d59d874d4100a8d07255ce9d4b8
 
     public JPanel getFrame() {
         return panel;
     }
-<<<<<<< HEAD
 }
-=======
-}
-    
-
->>>>>>> 9887db2bc7cd3d59d874d4100a8d07255ce9d4b8

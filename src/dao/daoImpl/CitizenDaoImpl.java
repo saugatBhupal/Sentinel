@@ -12,6 +12,7 @@ import config.sentinelErrorConfig.Exceptions.ExceptionsImpl.SentinelExceptionsIm
 import dao.CitizenDao;
 import database.JdbcConnection;
 import model.Citizen;
+import utils.orm.Orm;
 
 public class CitizenDaoImpl implements CitizenDao {
     
@@ -28,7 +29,7 @@ public class CitizenDaoImpl implements CitizenDao {
         try(PreparedStatement preparedStatement = jdbcConnection.connection.prepareStatement(query)){
             preparedStatement.setLong(1, citizenID);
             ResultSet resultSet = jdbcConnection.retrieve(preparedStatement);
-            return(Optional.ofNullable(EntityBuilder.objectOfCitizen(resultSet))
+            return(Optional.ofNullable(Orm.mapToCitizen(resultSet).get(0))
                 .orElseThrow(() -> sentinelExceptions.CitizenNotFound(citizenID)));
         }
         catch(SQLException e){
@@ -42,18 +43,30 @@ public class CitizenDaoImpl implements CitizenDao {
         List<Citizen> citizens = new ArrayList<>();
         try(PreparedStatement preparedStatement = jdbcConnection.connection.prepareStatement(query,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE)){
             ResultSet resultSet = jdbcConnection.retrieve(preparedStatement);
-            while(resultSet.next()){
-                resultSet.previous();
-                citizens.add(EntityBuilder.objectOfCitizen(resultSet));
-                resultSet.next();
-            }
-            System.out.println(citizens);
-
+            citizens = Orm.mapToCitizen(resultSet);
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return(citizens);
     }
 
+    @Override
+    public List<Citizen> search(String keyword) {
+        String query = "select * from Citizen where firstName = ? or middleName = ? or lastName = ? or contact = ? or citizenshipNo = ?";
+        try(PreparedStatement preparedStatement = jdbcConnection.connection.prepareStatement(query)){
+            preparedStatement.setString(1, keyword);
+            preparedStatement.setString(2, keyword);
+            preparedStatement.setString(3, keyword);
+            preparedStatement.setString(4, keyword);
+            preparedStatement.setString(5, keyword );
+            ResultSet resultSet = jdbcConnection.retrieve(preparedStatement);
+            return(Optional.ofNullable(Orm.mapToCitizen(resultSet))
+                .orElseThrow(() -> sentinelExceptions.CitizenNotFound(Long.parseLong("1234"))));
+        }
+        catch(SQLException e){
+            throw new RuntimeException("SQLException: " + e);
+        }
+    }
 }
 
