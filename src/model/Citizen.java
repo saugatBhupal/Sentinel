@@ -34,5 +34,17 @@ public class Citizen {
     @NonNull
     private String temporaryAddress;
 
-    
+    public String getFullName() {
+        StringBuilder fullName = new StringBuilder();
+        if (firstName != null) {
+            fullName.append(firstName);
+        }
+        if (middleName != null) {
+            fullName.append(fullName.length() > 0 ? " " + middleName : middleName);
+        }
+        if (lastName != null) {
+            fullName.append(fullName.length() > 0 ? " " + lastName : lastName);
+        }
+        return fullName.toString();
+    }   
 }

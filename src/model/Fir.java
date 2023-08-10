@@ -19,28 +19,22 @@ public class Fir {
 
     @NonNull
     private Long firID;
-    
     private Long filedBy;
     private Long filedAgainst;
     private Long witness;
-
     @NonNull
     private Date filedDate;
-
     @NonNull
     private Time filedTime;
-
     @NonNull
     private String description;
-
     @NonNull
     private String category;
-
     private String evidence;
-
     @NonNull
     private Long registeredBy;
-
+    private Date registeredDate;
+    private Time registeredTime;
     @NonNull
     private Integer status;
 
