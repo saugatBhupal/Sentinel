@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -48,6 +46,7 @@ import utils.ui.graphic.RoundedBorderLabel;
 import views.widget.DateTimeWidget;
 
 import model.Case;
+
 public class AssignedCasesPanel extends JFrame {
     private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
     private static FirController firController;
@@ -60,7 +59,6 @@ public class AssignedCasesPanel extends JFrame {
     private final App app;
     private Font font;
     private Map<TextAttribute, Object> attributes;
-
     public AssignedCasesPanel(App app, List<Case> cases) {
         this.app = app;
         this.firController = new FirControllerImpl(app);
@@ -96,6 +94,7 @@ public class AssignedCasesPanel extends JFrame {
         idTitle.setForeground(titleColor);
         idTitle.setBounds(59, 23, 120, 20);
         panel.add(idTitle);
+
         JLabel recordNameTitle = new JLabel();
         recordNameTitle.setText("Record Name");
         recordNameTitle.setFont(new Font("Jost", Font.PLAIN, 15));
@@ -131,12 +130,12 @@ public class AssignedCasesPanel extends JFrame {
         recordDate.setBounds(161, 70, 141, 32);
         panel.add(recordDate);
 
-        JLabel assignedToTitle = new JLabel();
-        assignedToTitle.setText("Assigned To");
-        assignedToTitle.setFont(new Font("Jost", Font.PLAIN, 15));
-        assignedToTitle.setForeground(titleColor);
-        assignedToTitle.setBounds(339, 20, 141, 32);
-        panel.add(assignedToTitle);
+        JLabel fregisteredByTitle = new JLabel();
+        fregisteredByTitle.setText("Registered By");
+        fregisteredByTitle.setFont(new Font("Jost", Font.PLAIN, 15));
+        fregisteredByTitle.setForeground(titleColor);
+        fregisteredByTitle.setBounds(339, 20, 141, 32);
+        panel.add(fregisteredByTitle);
 
         JLabel filedByTitle = new JLabel();
         filedByTitle.setText("Filed By");
@@ -152,12 +151,12 @@ public class AssignedCasesPanel extends JFrame {
         filedAgainstTitle.setBounds(339, 70, 141, 32);
         panel.add(filedAgainstTitle);
 
-        JLabel assignedTo = new JLabel();
-        assignedTo.setText(policeController.search(cs.getAssignedTo()).getCitizen().getFullName());
-        assignedTo.setFont(new Font("Jost", Font.PLAIN, 15));
-        assignedTo.setForeground(detailColor);
-        assignedTo.setBounds(457, 20, 241, 32);
-        panel.add(assignedTo);
+        JLabel registeredBy = new JLabel();
+        registeredBy.setText(policeController.search(fir.getRegisteredBy()).getCitizen().getFullName());
+        registeredBy.setFont(new Font("Jost", Font.PLAIN, 15));
+        registeredBy.setForeground(detailColor);
+        registeredBy.setBounds(457, 20, 241, 32);
+        panel.add(registeredBy);
 
         JLabel filedBy = new JLabel();
         filedBy.setText(citizenController.search(fir.getFiledBy()).getFullName());
@@ -281,7 +280,7 @@ public class AssignedCasesPanel extends JFrame {
         sideMenuBar.setBackground(Color.decode("#002349"));
         sideMenuBar.setOpaque(true);
         panel.add(sideMenuBar);
-
+        
         JTextField search = new JTextField();
         search.setBorder(null);
         search.addMouseListener(Hover.focusable(search));
@@ -289,14 +288,6 @@ public class AssignedCasesPanel extends JFrame {
         search.setFont(new Font("Jost", Font.PLAIN, 14));
         search.setForeground(new Color(61, 63, 64, 180));
         search.setBounds(414, 164, 365, 30);
-        search.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    caseController.fullTextSearch(search.getText());
-                }
-            }
-        });
         panel.add(search);
 
         RoundedLabel searchButton = new RoundedLabel("", 12, Color.decode("#1A75D5"), 9);
@@ -307,13 +298,6 @@ public class AssignedCasesPanel extends JFrame {
         searchButton.setForeground(Color.decode("#FFFFFF"));
         searchButton.setHorizontalAlignment(SwingConstants.CENTER);
         searchButton.setBorder(new RoundedBorderLabel(Color.decode("#1A75D5"), 1, 12));
-        searchButton.setCursor(new Cursor(HAND_CURSOR));
-        searchButton.addMouseListener(new MouseAdapter() {
-            @Override 
-            public void mouseClicked(MouseEvent e){
-                caseController.fullTextSearch(search.getText());
-            }
-        });
         panel.add(searchButton);
 
         JScrollPane scrollPane = new JScrollPane();

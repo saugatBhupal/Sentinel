@@ -23,7 +23,6 @@ public class ResetPassword {
     public ResetPassword() {
         initialize();
     }
-
     public void initialize() {
 
         frame = new JFrame();
@@ -68,7 +67,6 @@ public class ResetPassword {
         dashboardIcon.setBounds(36, 125, 35, 35);
         dashboardIcon.setIcon(new ImageIcon("resources/artboards/dash-icon-default.png"));
         panel.add(dashboardIcon);
-
         JLabel recordsIcon = new JLabel();
         recordsIcon.setBounds(39, 285, 35, 35);
         recordsIcon.setIcon(imagePlugins
@@ -117,7 +115,6 @@ public class ResetPassword {
         policeIdLine.setBackground(Color.decode("#000000"));
         policeIdLine.setOpaque(true);
         panel.add(policeIdLine);
-
         JLabel newPasswordLabel = new JLabel();
         newPasswordLabel.setFont(new Font("Jost", Font.PLAIN, 19));
         newPasswordLabel.setBounds(509, 333, 134, 31);
@@ -193,3 +190,5 @@ public class ResetPassword {
         return panel;
     }
 }
+
+       

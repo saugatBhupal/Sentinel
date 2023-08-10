@@ -12,7 +12,6 @@ import config.sentinelErrorConfig.Exceptions.ExceptionsImpl.SentinelExceptionsIm
 import dao.CitizenDao;
 import database.JdbcConnection;
 import model.Citizen;
-import utils.builder.EntityBuilder;
 
 public class CitizenDaoImpl implements CitizenDao {
     
