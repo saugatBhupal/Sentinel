@@ -1,6 +1,7 @@
 package views;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -134,38 +135,38 @@ public class CitizenDetails extends JFrame {
         status.setWrapStyleWord(true);
         panel.add(status);
 
-        JTextArea detail = new JTextArea();
-        detail.setText("view ->");
-        detail.setBackground(Color.decode("#FFFFFF"));
-        detail.setFont(new Font("Jost", Font.PLAIN, 14));
-        detail.setForeground(Color.decode("#000000"));
-        detail.setBounds(688, 0, 87, 20);
-        detail.setBorder(null);
-        detail.setEditable(false);
-        detail.setLineWrap(true);
-        detail.setWrapStyleWord(true);
-        detail.addMouseListener(new MouseAdapter() {
+        RoundedLabel details = new RoundedLabel("", 12, Color.decode("#FEEEEE"), 9);
+        details.setBounds(660, 0, 80, 20);
+        details.setBackground(Color.decode("#EEF7FE"));
+        details.setText("Details");
+        details.setFont(new Font("Jost", Font.PLAIN, 13));
+        details.setForeground(Color.decode("#647DC4"));
+        details.setHorizontalAlignment(SwingConstants.CENTER);
+        details.setBorder(new RoundedBorderLabel(Color.decode("#26449E"), 1, 12));
+        details.addMouseListener(Hover.animateOutline(details, "#EEF7FE", "#647DC4", "#26449E", "#EEF7FE"));
+        details.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        details.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
-                
+            public void mouseClicked(MouseEvent e) {
+
                 Case cs = caseController.findByFirID(fir.getFirID());
-                if(statusValue == 2){
+                if (statusValue == 2) {
                     Verdict verdict = verdictController.getVerdict(cs);
                     if (verdict != null) {
                         ImageViewerWidget widget = new ImageViewerWidget((verdict.getVerdict()));
                         widget.setVisible(true);
                     }
                 }
-                if(statusValue == 1){   
+                if (statusValue == 1) {
                     List<Log> logs = caseController.getAllLogs(cs.getCaseID());
-                    caseController.getDetail(cs,logs);
+                    caseController.getDetail(cs, logs);
                 }
-                if(statusValue == 0){
+                if (statusValue == 0) {
                     firController.getDetail(fir);
                 }
             }
         });
-        panel.add(detail);
+        panel.add(details);
 
         return panel;
     }
@@ -202,7 +203,7 @@ public class CitizenDetails extends JFrame {
         panel.add(separator);
 
         JLabel currentPageTitle = new JLabel();
-        currentPageTitle.setText("Criminal history");
+        currentPageTitle.setText("Citizen details");
         currentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
         currentPageTitle.setForeground(Color.decode("#1A75D5"));
         currentPageTitle.setBounds(400, 61, 151, 32);
@@ -369,28 +370,28 @@ public class CitizenDetails extends JFrame {
         firs.setText(String.valueOf(firController.filterByStatus("*", citizen.getCitizenshipNo()).size()));
         firs.setFont(new Font("Jost", Font.PLAIN, 15));
         firs.setForeground(Color.decode("#415EB6"));
-        firs.setBounds(862, 180, 141, 32);
+        firs.setBounds(868, 180, 141, 32);
         panel.add(firs);
 
         JLabel pending = new JLabel();
         pending.setText(String.valueOf(firController.filterByStatus(0, citizen.getCitizenshipNo()).size()));
         pending.setFont(new Font("Jost", Font.PLAIN, 15));
         pending.setForeground(Color.decode("#415EB6"));
-        pending.setBounds(862, 216, 141, 32);
+        pending.setBounds(868, 216, 141, 32);
         panel.add(pending);
 
         JLabel ongoing = new JLabel();
         ongoing.setText(String.valueOf(firController.filterByStatus(1, citizen.getCitizenshipNo()).size()));
         ongoing.setFont(new Font("Jost", Font.PLAIN, 15));
         ongoing.setForeground(Color.decode("#415EB6"));
-        ongoing.setBounds(862, 252, 141, 32);
+        ongoing.setBounds(868, 252, 141, 32);
         panel.add(ongoing);
 
         JLabel convictions = new JLabel();
         convictions.setText(String.valueOf(firController.filterByStatus(2, citizen.getCitizenshipNo()).size()));
         convictions.setFont(new Font("Jost", Font.PLAIN, 15));
         convictions.setForeground(Color.decode("#415EB6"));
-        convictions.setBounds(862, 298, 141, 32);
+        convictions.setBounds(868, 298, 141, 32);
         panel.add(convictions);
 
         JLabel recordDetails = new JLabel();

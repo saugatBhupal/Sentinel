@@ -241,7 +241,7 @@ public class CriminalList extends JFrame {
         panel.add(separator);
 
         JLabel currentPageTitle = new JLabel();
-        currentPageTitle.setText("List of citizens");
+        currentPageTitle.setText("List of criminals");
         currentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
         currentPageTitle.setForeground(Color.decode("#1A75D5"));
         currentPageTitle.setBounds(400, 61, 151, 32);

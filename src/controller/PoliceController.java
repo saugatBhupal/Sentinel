@@ -11,4 +11,5 @@ public interface PoliceController {
     Police resetPassword(Long policeID, String password);
     Police search(Long policeID);
     void fullTextSearch(String keyword);
+    void getDashboard();
 }

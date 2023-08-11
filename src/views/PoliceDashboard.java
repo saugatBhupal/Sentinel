@@ -3,6 +3,8 @@ package views;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Map;
@@ -74,13 +76,13 @@ public class PoliceDashboard extends JFrame {
 		JLabel parentPageTitle = new JLabel();
 		parentPageTitle.setText("F.I.R");
 		if (app.context.getRole() == "police") {
-			parentPageTitle.setText("F.I.R is police");
+			parentPageTitle.setText("Police Dashboard");
 		} else {
-			parentPageTitle.setText("F.I.R is oic");
+			parentPageTitle.setText("OIC Dashboard");
 		}
 		parentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
 		parentPageTitle.setForeground(Color.decode("#002349"));
-		parentPageTitle.setBounds(239, 61, 141, 32);
+		parentPageTitle.setBounds(239, 61, 300, 32);
 		panel.add(parentPageTitle);
 
 		DateTimeWidget.addWidget(panel);
@@ -116,7 +118,15 @@ public class PoliceDashboard extends JFrame {
 		JTextField search = new JTextField();
 		search.setBorder(null);
 		search.addMouseListener(Hover.focusable(search));
-		search.addFocusListener(Focus.setPlaceholder(search, "Search existing F.I.Rs"));
+		search.addFocusListener(Focus.setPlaceholder(search, "Search for citizens......."));
+		search.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    citizenController.fullTextSearch(search.getText());
+                }
+            }
+        });
 		search.setFont(new Font("Jost", Font.PLAIN, 14));
 		search.setForeground(new Color(61, 63, 64, 180));
 		search.setBounds(510, 166, 365, 30);

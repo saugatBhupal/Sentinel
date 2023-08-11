@@ -78,7 +78,7 @@ public class OICDashboard extends JFrame {
                 panel.add(logo);
 
                 JLabel parentPageTitle = new JLabel();
-                parentPageTitle.setText("F.I.R");
+                parentPageTitle.setText("O.I.C Dashboard");
                 parentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
                 parentPageTitle.setForeground(Color.decode("#002349"));
                 parentPageTitle.setBounds(239, 61, 141, 32);
@@ -89,6 +89,13 @@ public class OICDashboard extends JFrame {
                 JLabel dashboardIcon = new JLabel();
                 dashboardIcon.setBounds(36, 125, 35, 35);
                 dashboardIcon.setIcon(new ImageIcon("resources/artboards/dash-icon-default.png"));
+                dashboardIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                dashboardIcon.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e){
+                                policeController.getDashboard();
+                        }
+                });
                 panel.add(dashboardIcon);
 
                 JLabel recordsIcon = new JLabel();
@@ -96,6 +103,13 @@ public class OICDashboard extends JFrame {
                 recordsIcon.setIcon(imagePlugins
                                 .resize(new ImageIcon("resources/artboards/records-icon-default.png").getImage(),
                                                 recordsIcon));
+                recordsIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                recordsIcon.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e){
+                                firController.getAllFir();
+                        }
+                });
                 panel.add(recordsIcon);
 
                 JLabel officersIcon = new JLabel();
@@ -103,16 +117,37 @@ public class OICDashboard extends JFrame {
                 officersIcon.setIcon(imagePlugins
                                 .resize(new ImageIcon("resources/artboards/police-icon-selected.png").getImage(),
                                                 officersIcon));
+                officersIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                officersIcon.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e){
+                                policeController.getAllPolice();
+                        }
+                });
                 panel.add(officersIcon);
 
                 JLabel citizensIcon = new JLabel();
                 citizensIcon.setBounds(39, 413, 35, 35);
                 citizensIcon.setIcon(new ImageIcon("resources/artboards/citizen-icon-default.png"));
+                citizensIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                citizensIcon.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e){
+                                citizenController.getAllCitizens();
+                        }
+                });
                 panel.add(citizensIcon);
 
                 JLabel convictsIcon = new JLabel();
                 convictsIcon.setBounds(39, 477, 35, 35);
                 convictsIcon.setIcon(new ImageIcon("resources/artboards/convict-icon-default.png"));
+                convictsIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                convictsIcon.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e){
+                                citizenController.getAllCriminals();
+                        }
+                });
                 panel.add(convictsIcon);
 
                 JLabel sideMenuBar = new JLabel();
@@ -214,6 +249,7 @@ public class OICDashboard extends JFrame {
                 citizensLine.setBackground(Color.decode("#1A75D5"));
                 citizensLine.setOpaque(true);
                 panel.add(citizensLine);
+                
 
                 JLabel citizenText = new JLabel();
                 citizenText.setFont(new Font("Jost", Font.PLAIN, 14));

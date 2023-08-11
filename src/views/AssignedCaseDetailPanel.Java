@@ -170,7 +170,7 @@ public class AssignedCaseDetailPanel extends JFrame {
         panel.add(logo);
 
         JLabel parentPageTitle = new JLabel();
-        parentPageTitle.setText("F.I.R");
+        parentPageTitle.setText("Case Details");
         parentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
         parentPageTitle.setForeground(Color.decode("#002349"));
         parentPageTitle.setBounds(239, 61, 141, 32);

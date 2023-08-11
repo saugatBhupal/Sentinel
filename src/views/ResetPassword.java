@@ -56,7 +56,7 @@ public class ResetPassword {
         panel.add(separator);
 
         JLabel currentPageTitle = new JLabel();
-        currentPageTitle.setText("Register Officer");
+        currentPageTitle.setText("Reset Password");
         currentPageTitle.setFont(new Font("Jost", Font.PLAIN, 20));
         currentPageTitle.setForeground(Color.decode("#1A75D5"));
         currentPageTitle.setBounds(412, 61, 151, 32);

@@ -109,7 +109,7 @@ public class AllCasesPanel extends JFrame {
         JTextField search = new JTextField();
         search.setBorder(null);
         search.addMouseListener(Hover.focusable(search));
-        search.addFocusListener(Focus.setPlaceholder(search, "Search for existing F.I.Rs"));
+        search.addFocusListener(Focus.setPlaceholder(search, "Search for cases"));
         search.setFont(new Font("Jost", Font.PLAIN, 14));
         search.setForeground(new Color(61, 63, 64, 180));
         search.setBounds(414, 164, 365, 30);

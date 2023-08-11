@@ -154,4 +154,19 @@ public class PoliceControllerImpl implements PoliceController {
         return null;
     }
 
+    @Override
+    public void getDashboard() {
+        try{
+            if(app.context.getRole() == "Police"){
+                app.addPanel(new OICDashboard(app).getFrame());
+            }
+            else{
+                app.addPanel(new PoliceDashboard(app).getFrame());
+            }
+        }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(app, "Error redirecting to dashboard");
+        }
+    }
+
 }
