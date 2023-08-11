@@ -158,10 +158,10 @@ public class PoliceControllerImpl implements PoliceController {
     public void getDashboard() {
         try{
             if(app.context.getRole() == "Police"){
-                app.addPanel(new OICDashboard(app).getFrame());
+                app.addPanel(new PoliceDashboard(app).getFrame());
             }
             else{
-                app.addPanel(new PoliceDashboard(app).getFrame());
+                app.addPanel(new OICDashboard(app).getFrame());
             }
         }
         catch(Exception e){

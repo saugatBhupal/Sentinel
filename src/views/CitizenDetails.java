@@ -25,10 +25,14 @@ import javax.swing.border.EmptyBorder;
 import org.apache.batik.gvt.text.GVTAttributedCharacterIterator.TextAttribute;
 
 import controller.CaseController;
+import controller.CitizenController;
 import controller.FirController;
+import controller.PoliceController;
 import controller.VerdictController;
 import controller.controllerImpl.CaseControllerImpl;
+import controller.controllerImpl.CitizenControllerImpl;
 import controller.controllerImpl.FirControllerImpl;
+import controller.controllerImpl.PoliceControllerImpl;
 import controller.controllerImpl.VerdictControllerImpl;
 import model.Case;
 import model.Citizen;
@@ -53,7 +57,9 @@ public class CitizenDetails extends JFrame {
     private ImagePlugins imagePlugins = PluginFactory.createPlugin(MediaFormat.ofType.IMAGE);
     private static FirController firController;
     private static CaseController caseController;
+    private static CitizenController citizenController;
     private static VerdictController verdictController;
+    private static PoliceController policeController;
     private Font font;
     private Map<TextAttribute, Object> attributes;
 
@@ -61,8 +67,10 @@ public class CitizenDetails extends JFrame {
         this.app = app;
         this.citizen = citizen;
         this.firController = new FirControllerImpl(app);
+        this.citizenController = new CitizenControllerImpl(app);
         this.caseController = new CaseControllerImpl(app);
         this.verdictController = new VerdictControllerImpl(app);
+        this.policeController = new PoliceControllerImpl(panel, app);
         initialize();
     }
 
@@ -214,29 +222,67 @@ public class CitizenDetails extends JFrame {
         JLabel dashboardIcon = new JLabel();
         dashboardIcon.setBounds(36, 125, 35, 35);
         dashboardIcon.setIcon(new ImageIcon("resources/artboards/dash-icon-default.png"));
+        dashboardIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        dashboardIcon.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e){
+                        policeController.getDashboard();
+                }
+        });
         panel.add(dashboardIcon);
 
         JLabel recordsIcon = new JLabel();
         recordsIcon.setBounds(39, 285, 35, 35);
         recordsIcon.setIcon(imagePlugins
-                .resize(new ImageIcon("resources/artboards/records-icon-default.png").getImage(), recordsIcon));
+                        .resize(new ImageIcon("resources/artboards/records-icon-default.png").getImage(),
+                                        recordsIcon));
+        recordsIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        recordsIcon.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e){
+                        firController.getAllFir();
+                }
+        });
         panel.add(recordsIcon);
 
         JLabel officersIcon = new JLabel();
         officersIcon.setBounds(44, 349, 35, 25);
         officersIcon.setIcon(imagePlugins
-                .resize(new ImageIcon("resources/artboards/police-icon-selected.png").getImage(), officersIcon));
+                        .resize(new ImageIcon("resources/artboards/police-icon-selected.png").getImage(),
+                                        officersIcon));
+        officersIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        officersIcon.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e){
+                        policeController.getAllPolice();
+                }
+        });
         panel.add(officersIcon);
 
         JLabel citizensIcon = new JLabel();
         citizensIcon.setBounds(39, 413, 35, 35);
         citizensIcon.setIcon(new ImageIcon("resources/artboards/citizen-icon-default.png"));
+        citizensIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        citizensIcon.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e){
+                        citizenController.getAllCitizens();
+                }
+        });
         panel.add(citizensIcon);
 
         JLabel convictsIcon = new JLabel();
         convictsIcon.setBounds(39, 477, 35, 35);
         convictsIcon.setIcon(new ImageIcon("resources/artboards/convict-icon-default.png"));
+        convictsIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        convictsIcon.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e){
+                        citizenController.getAllCriminals();
+                }
+        });
         panel.add(convictsIcon);
+
 
         JLabel sideMenuBar = new JLabel();
         sideMenuBar.setBounds(0, 0, 108, 841);
